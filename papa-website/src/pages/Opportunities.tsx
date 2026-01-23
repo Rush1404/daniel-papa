@@ -59,32 +59,6 @@ const Opportunities: React.FC = () => {
         </div>
       </section>
 
-      {/* SECTION 2: VALUE GRID */}
-      <section className="bg-gray-100 py-20 px-6 lg:px-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4">
-          {[
-            { title: "Best Value in Toronto", desc: "A townhome for less than the price of a 2-bedroom condo downtown." },
-            { title: "Waterfront Neighborhood", desc: "In the heart of Etobicoke and at the centre of Lakeshore's gentrification." },
-            { title: "Incredible Investment", desc: "Affordable new build at resale value with much lower carrying costs." },
-            { title: "Long Closing", desc: "Estimated completion 2026." }
-          ].map((item, i) => (
-            <motion.div 
-              key={i} 
-              {...fadeInUp} 
-              transition={{ delay: i * 0.1 }}
-              className="bg-white p-10 text-center border-t-4 border-brand-gold"
-            >
-              <h4 className="text-brand-maroon text-[11px] tracking-[0.3em] uppercase mb-6 font-bold h-12 flex items-center justify-center leading-tight">
-                {item.title}
-              </h4>
-              <p className="text-gray-500 text-xs leading-relaxed italic">
-                {item.desc}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
       {/* SECTION 3: ALTERNATING ABOUT SECTIONS */}
       <section className="py-32 px-6 lg:px-12 max-w-7xl mx-auto space-y-40">
         
