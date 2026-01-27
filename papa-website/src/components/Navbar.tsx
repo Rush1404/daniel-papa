@@ -27,9 +27,11 @@ const Navbar: React.FC = () => {
   const logoTextColor = 'text-brand-maroon';
 
   const navLinks = [
-    { name: 'Mission', path: '/mission' },
-    { name: 'REAL ESTATE', path: '', dropdown: true },
-    { name: 'Opportunities', path: '/opportunities' },
+    { name: 'Meet Daniel', path: '/meet-daniel' },
+    { name: 'My Approach', path: '/mission' },
+    { name: 'MLS Search', path: '/MLS' },
+    { name: 'Ontario', path: '', dropdown: true },
+    { name: 'Yucatan', path: '/yucatan' },
   ];
 
   return (
@@ -77,38 +79,15 @@ const Navbar: React.FC = () => {
                              before:content-[''] before:absolute before:-top-4 before:left-0 before:w-full before:h-4"
                 >
                   <Link to="/residential" className="hover:text-brand-gold transition-colors">Residential</Link>
-                  <Link to="#" className="hover:text-brand-gold transition-colors">Pre-Construction</Link>
-                  <Link to="#" className="hover:text-brand-gold transition-colors">Commercial</Link>
-                  
-                  {/* Investment with Sub-Menu Trigger */}
-                  <div 
-                    className="relative flex justify-between items-center hover:text-brand-gold cursor-pointer transition-colors"
-                    onMouseEnter={() => setIsInvestmentSubOpen(true)}
-                  >
-                    <span>Investment</span>
-                    <ChevronRight size={12} />
-
-                    {/* Investment Sub-Menu (Nested) */}
-                    <AnimatePresence>
-                      {isInvestmentSubOpen && (
-                        <motion.div 
-                          initial={{ opacity: 0, x: 10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: 10 }}
-                          className="absolute left-full top-[-24px] ml-4 bg-white shadow-2xl py-6 px-8 min-w-[180px] flex flex-col gap-4 text-brand-maroon border-t-2 border-brand-gold"
-                        >
-                          <Link to="/yucatan" onClick={() => { setIsDropdownOpen(false); setIsInvestmentSubOpen(false); }} className="hover:text-brand-gold transition-colors">Yucatan</Link>
-                          <Link to="" onClick={() => { setIsDropdownOpen(false); setIsInvestmentSubOpen(false); }} className="hover:text-brand-gold transition-colors">Ontario</Link>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                  <Link to="/investment" className="hover:text-brand-gold transition-colors">Investment & <br></br>Multi-Family</Link>
+                  <Link to="/pre-construction" className="hover:text-brand-gold transition-colors">Pre-Construction</Link>
+                  <Link to="/commercial" className="hover:text-brand-gold transition-colors">Commercial</Link>           
                 </motion.div>
               )}
             </div>
           ))}
           <Link to="/contact" className="px-8 py-3 transition-all duration-500 text-[10px] tracking-[0.3em] font-bold text-center bg-brand-maroon text-white hover:bg-brand-gold">
-            Book a Discovery Call
+            Book a Call with Daniel
           </Link>
         </div>
       </div>

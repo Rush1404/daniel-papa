@@ -2,11 +2,14 @@ import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, Link } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage'; // Move your current App content here
-import Residential from './pages/Residential';
+import MeetDaniel from './pages/MeetDaniel';
+import Residential from './pages/Ontario/Residential';
 import Mission from './pages/Mission';
-import Opportunities from './pages/Opportunities';
 import Contact from './pages/Contact';
 import Yucatan from './pages/Yucatan';
+import PreConstruction from './pages/Ontario/PreConstruction';
+import Investment from './pages/Ontario/Investment';
+import Commercial from './pages/Ontario/Commercial';
 import { Instagram, Facebook, Linkedin} from 'lucide-react';
 
 const App: React.FC = () => {
@@ -22,12 +25,14 @@ const App: React.FC = () => {
       
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/meet-daniel" element={<MeetDaniel />} />
         <Route path="/residential" element={<Residential />} />
         <Route path="/mission" element={<Mission />} />
-        <Route path="/opportunities" element={<Opportunities />} />
+        <Route path='/pre-construction' element={<PreConstruction />} />
+        <Route path='/investment' element={<Investment />} />
+        <Route path="/commercial" element={<Commercial />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/yucatan" element={<Yucatan />} />
-        
       </Routes>
 
       {/* Persistent Footer using Daniel's branding */}

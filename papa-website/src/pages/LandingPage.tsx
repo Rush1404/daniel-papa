@@ -9,14 +9,15 @@ interface Category {
   title: string;
   desc: string;
   img: string;
+  tag: string;
   path?: string;
 }
 
 const categories: Category[] = [
-  { title: 'RESIDENTIAL', desc: "Find your perfect fit at the absolute best price.", img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800', path: '/residential' },
-  { title: 'PRE-CONSTRUCTION', desc: "Educating you on the best pre-construction options.", img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800' },
-  { title: 'COMMERCIAL', desc: "A space that shares your story with your customers.", img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800' },
-  { title: 'INVESTMENT', desc: "Real estate as a way to diversify your portfolio.", img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800' }
+  { title: 'RESIDENTIAL', desc: "Thoughtful strategy and strong negotiation to ensure your biggest move is your best move.", img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800', tag: 'EXPLORE HOMES', path: '/residential' },
+  { title: 'INVESTMENT & MULTI-FAMILY', desc: "Transform real estate into a powerful tool for your financial legacy, both locally and abroad.", img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800', tag: 'EXPLORE INVESTMENT OPPORTUNITIES ' },
+  { title: 'PRE-CONSTRUCTION ', desc: "Move beyond speculation with expert clarity on location, reputation, and long-term appreciation.", img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800', tag: 'EXPLORE DEVELOPMENTS' },
+  { title: 'INVESTMENT', desc: "Empowering your business growth through expert negotiation and deep-rooted local market knowledge.", img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800', tag: 'EXPLORE COMMERCIAL' }
 ];
 
 const listings = [
@@ -104,16 +105,18 @@ const App: React.FC = () => {
               transition={{ delay: 0.5, duration: 0.8 }}
               className="text-brand-maroon text-5xl md:text-8xl font-light tracking-tighter mb-6 uppercase drop-shadow-sm"
             >
-              BUILDING YOUR <span className="italic text-brand-gold">FUTURE.</span>
+              LIFESTYLE. STRATEGIC. <span className="italic text-brand-gold">REAL ESTATE.</span>
             </motion.h1>
             
             <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="text-gray-700 font-medium text-sm md:text-base tracking-[0.4em] uppercase mb-12"
+              className="text-gray-700 font-med text-sm md:text-base mb-12"
             >
-              Redefine the way you connect with Toronto Real Estate.
+              Every stage of life deserves a real estate strategy that prioritizes your lifestyle.
+              By combining your vision with my 15 <br></br> years of proven strategic real estate market expertise,
+              your next move will be as rewarding as it is seamless. 
             </motion.p>
             
             <motion.div 
@@ -124,7 +127,7 @@ const App: React.FC = () => {
             >
               {/* Button 1: Solid Maroon */}
               <button className="btn-maroon">View Listings</button>
-              <button className="btn-gold">Meet the Team</button>
+              <a className="btn-gold" href="/meet-daniel">Meet the Team</a>
             </motion.div>
           </div>
         </section>
@@ -142,67 +145,14 @@ const App: React.FC = () => {
                 </div>
                 <h3 className="text-brand-maroon tracking-[0.3em] font-medium mb-3 text-sm">{cat.title}</h3>
                 <p className="text-gray-500 text-xs leading-relaxed mb-6 px-4">{cat.desc}</p>
-                <button className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold pb-1 hover:text-brand-gold">Learn More</button>
+                <button className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold pb-1 hover:text-brand-gold">{cat.tag}</button>
               </motion.div>
             ))}
           </div>
         </section>
 
-        {/* MEET THE TEAM SECTION (Full Body) */}
-        <section className="max-w-7xl mx-auto px-6 lg:px-12 py-20">
-          <motion.h1 
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-center text-4xl md:text-6xl font-light tracking-[0.3em] text-black mb-24 uppercase"
-          >
-            Meet The Team
-          </motion.h1>
-
-          <div className="flex flex-col lg:flex-row gap-16 items-start">
-            {/* Portrait Column */}
-            <motion.div {...sideFade('left')} className="flex-1 sticky top-40">
-              <div className="aspect-[3/4] overflow-hidden shadow-2xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1000" 
-                  className="w-full h-full object-cover" 
-                  alt="Daniel Papa Portrait" 
-                />
-              </div>
-            </motion.div>
-
-            {/* Biography Column */}
-            <motion.div {...sideFade('right')} className="flex-1 py-10">
-              <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-brand-maroon mb-12 uppercase leading-tight">
-                DANIEL <br/> PAPA
-              </h2>
-              
-              <div className="space-y-8 text-gray-700 text-lg leading-relaxed font-light">
-                <p>
-                  A dedicated and passionate realtor, Daniel has blazed a serious trail in the real estate industry, 
-                  redefining the standards of service and professionalism. As the founder of his team, he has devoted 
-                  his career to crafting a real estate experience like no other.
-                </p>
-                <p>
-                  Born into an environment that valued hard work and entrepreneurship, Daniel's journey began with a 
-                  bold move into the Toronto market. He recognizes potential for growth and value, helping his 
-                  clients make informed decisions through every step of the process.
-                </p>
-                <p>
-                  Currently residing in the Greater Toronto Area, Daniel's connection to the community runs deep. 
-                  His love for the neighborhood and its residents drives his dedication to helping clients find 
-                  their perfect homes in this diverse and exciting locale.
-                </p>
-              </div>
-
-              <button className="mt-16 btn-maroon w-full md:w-auto">
-                Book a Call with Daniel
-              </button>
-            </motion.div>
-          </div>
-        </section>
-
         {/* LISTINGS SECTION */}
-        <section className="py-24 px-6 lg:px-12 bg-white">
+        {/*<section className="py-24 px-6 lg:px-12 bg-white">
           <motion.h2 {...fadeInUp} className="text-center text-xs tracking-[0.5em] uppercase text-brand-gold mb-20">New Listings</motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {listings.map((item) => (
@@ -220,7 +170,7 @@ const App: React.FC = () => {
               </motion.div>
             ))}
           </div>
-        </section>
+        </section> */}
 
         {/* TESTIMONIALS */}
         <section className="py-32 bg-white">
