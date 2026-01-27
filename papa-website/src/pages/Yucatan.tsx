@@ -2,12 +2,12 @@ import React from 'react';
 import { motion, LazyMotion, domMax, type HTMLMotionProps } from 'framer-motion';
 
 // Asset Imports
-import YucatanHero from '../assets/yucatan_imgs/yucatan_hero.jpg';
-import YucatanExterior from '../assets/yucatan_imgs/yucatan_exterior.jpg';
-import FrontExterior from '../assets/yucatan_imgs/front_exterior_view.jpg';
-import LivingRoomKitchen from '../assets/yucatan_imgs/living_room_+_kitchen.jpg';
-import MasterBath from '../assets/yucatan_imgs/master_bathroom.jpg';
-import GuestBed1 from '../assets/yucatan_imgs/guest_bedroom_1.jpg';
+import YucatanHero from '../assets/yucatan_imgs/yucatan_hero.webp';
+import YucatanExterior from '../assets/yucatan_imgs/yucatan_exterior.webp';
+import FrontExterior from '../assets/yucatan_imgs/front_exterior_view.webp';
+import LivingRoomKitchen from '../assets/yucatan_imgs/living_room_+_kitchen.webp';
+import MasterBath from '../assets/yucatan_imgs/master_bathroom.webp';
+import GuestBed1 from '../assets/yucatan_imgs/guest_bedroom_1.webp';
 
 // 1. Fixed TypeScript Animation Object
 // Using HTMLMotionProps<"div"> ensures compatibility with motion.div, motion.h1, etc.
