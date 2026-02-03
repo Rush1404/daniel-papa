@@ -62,10 +62,10 @@ const Mission: React.FC = () => {
         </div>
       </section>
 
-      {/* SECTION 3: THE THREE PILLARS */}
+      {/* SECTION 3: THE PAPA WAY */}
       <section className="py-32 px-6 lg:px-12 bg-white">
         <div className="max-w-7xl mx-auto">
-          <motion.h2 {...fadeInUp} className="text-center text-brand-maroon text-3xl font-light tracking-[0.4em] uppercase mb-24">The Pillars</motion.h2>
+          <motion.h2 {...fadeInUp} className="text-center text-brand-maroon text-3xl font-light tracking-[0.4em] uppercase mb-24">The Papa Way</motion.h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
             <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="text-center group">

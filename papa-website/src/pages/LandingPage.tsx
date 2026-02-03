@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import { createClient } from '@supabase/supabase-js';
 
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // --- Types & Data ---
 interface Category {
@@ -21,9 +26,10 @@ const categories: Category[] = [
 ];
 
 const listings = [
-  { id: 1, addr: "611 COLLEGE STREET WEST", type: "COMMERCIAL", img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800" },
-  { id: 2, addr: "800 LAWRENCE AVE W", type: "RESIDENTIAL", img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800" },
-  { id: 3, addr: "WESTSHORE, LONG BRANCH", type: "PRE-CONSTRUCTION", img: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800" }
+  { id: 1, title: "611 COLLEGE STREET WEST", price: "$1.1M", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800", tag: "Pre-Construction" },
+  { id: 2, title: "800 LAWRENCE AVE W", price:"$3.1M", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800", tag: "Investment" },
+  { id: 3, title: "WESTSHORE, LONG BRANCH", price:"$2.2M", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800", tag: "Commerical" },
+  { id: 4, title: "Forest Hill Classic", price: "$7.1M", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800", tag: "Residential" }
 ];
 
 const testimonials = [
@@ -54,15 +60,24 @@ const sideFade = (direction: 'left' | 'right') => ({
 // --- Main App Component ---
 const App: React.FC = () => {
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const [startIndex, setStartIndex] = useState(0);
 
   const nextSlide = () => {
-    setStartIndex((prev) => (prev + 1) % testimonials.length);
+    setCurrentIndex((prev) => (prev + 1 >= listings.length ? 0 : prev + 1));
   };
 
   const prevSlide = () => {
-    setStartIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setCurrentIndex((prev) => (prev === 0 ? listings.length - 1 : prev - 1));
   };
+
+  // Logic to show 3 items starting from currentIndex, wrapping around the end
+  const visibleListings = [
+    listings[currentIndex],
+    listings[(currentIndex + 1) % listings.length],
+    listings[(currentIndex + 2) % listings.length],
+  ];
 
   // Logic to get exactly 3 visible cards in a circular fashion
   const visibleTestimonials = [
@@ -70,6 +85,16 @@ const App: React.FC = () => {
     testimonials[(startIndex + 1) % testimonials.length],
     testimonials[(startIndex + 2) % testimonials.length]
   ];
+
+  const [blogs, setBlogs] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      const { data } = await supabase.from('blogs').select('*').order('created_at', { ascending: false }).limit(3);
+      if (data) setBlogs(data);
+    };
+    fetchBlogs();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-brand-gold selection:text-white overflow-x-hidden">
@@ -97,37 +122,44 @@ const App: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
           </motion.div>
 
-          {/* CONTENT CONTENT - Higher Z-Index for clickable buttons */}
-          <div className="relative z-20 text-center px-6"> {/* Bumped z-index to 20 */}
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="text-brand-maroon text-5xl md:text-8xl font-light tracking-tighter mb-6 uppercase drop-shadow-sm"
-            >
-              LIFESTYLE. STRATEGIC. <span className="italic text-brand-gold">REAL ESTATE.</span>
-            </motion.h1>
+          {/* CONTENT CONTENT - Right-Aligned Editorial Layout */}
+          <div className="relative z-20 w-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col items-end justify-center h-full">
             
+            {/* Header Stack */}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="text-right mb-8"
+            >
+              <h1 className="text-brand-maroon text-5xl md:text-8xl font-light tracking-tighter uppercase leading-[0.9] drop-shadow-sm flex flex-col">
+                <span>Lifestyle.</span>
+                <span>Strategic.</span>
+                <span className="italic text-brand-gold">Real Estate.</span>
+              </h1>
+            </motion.div>
+            
+            {/* Description Text */}
             <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="text-gray-700 font-med text-sm md:text-base mb-12"
+              className="text-gray-700 font-medium text-sm md:text-base mb-12 text-right max-w-md leading-relaxed"
             >
               Every stage of life deserves a real estate strategy that prioritizes your lifestyle.
-              By combining your vision with my 15 <br></br> years of proven strategic real estate market expertise,
+              By combining your vision with my 15 years of proven strategic real estate market expertise,
               your next move will be as rewarding as it is seamless. 
             </motion.p>
             
+            {/* Buttons Container - Also Right Aligned */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.8 }}
-              className="flex flex-col md:flex-row gap-6 justify-center items-center"
+              className="flex flex-col md:flex-row gap-6 justify-end items-center"
             >
-              {/* Button 1: Solid Maroon */}
               <button className="btn-maroon">View Listings</button>
-              <a className="btn-gold" href="/meet-daniel">Meet the Team</a>
+              <a className="btn-gold" href="/meet-daniel">Book a Call</a>
             </motion.div>
           </div>
         </section>
@@ -171,6 +203,96 @@ const App: React.FC = () => {
             ))}
           </div>
         </section> */}
+
+        {/* Listings Carousel */}
+        <section className="py-20 bg-white border-y border-stone-100">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            
+            {/* Header Strip */}
+            <div className="flex justify-between items-end mb-12">
+              <div>
+                <h2 className="text-brand-gold text-[10px] tracking-[0.5em] uppercase mb-2 font-bold">Curated Selection</h2>
+                <h3 className="text-brand-maroon text-3xl font-light tracking-tight uppercase">Latest Opportunities</h3>
+              </div>
+              
+              <div className="flex gap-2">
+                <button onClick={prevSlide} className="p-2 border border-stone-200 hover:bg-brand-maroon hover:text-white transition-all">
+                  <ChevronLeft size={18} />
+                </button>
+                <button onClick={nextSlide} className="p-2 border border-stone-200 hover:bg-brand-maroon hover:text-white transition-all">
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* The 3-Column Carousel */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <AnimatePresence mode="popLayout" initial={false}>
+                {visibleListings.map((item, idx) => (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                    className="group cursor-pointer"
+                  >
+                    <div className="relative aspect-[16/10] overflow-hidden mb-4 bg-stone-100 shadow-sm">
+                      <img 
+                        src={item.image} 
+                        alt={item.title}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                      />
+                      <div className="absolute top-4 left-4 bg-white/90 px-3 py-1">
+                        <p className="text-[8px] tracking-widest uppercase text-brand-maroon font-bold">{item.tag}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <h4 className="text-brand-maroon text-xs tracking-[0.2em] uppercase font-medium">{item.title}</h4>
+                      <p className="text-gray-400 text-[10px] tracking-widest">{item.price}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        </section>
+        
+        {/* Blog Carousel */}
+        <section className="py-24 bg-white border-b border-stone-100">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="flex items-baseline justify-between mb-16">
+              <h3 className="text-brand-maroon text-2xl font-light tracking-tight uppercase italic">Insights & Editorial</h3>
+              <a href="" className="text-[9px] tracking-[0.4em] uppercase border-b border-brand-gold pb-1 hover:text-brand-gold transition-colors">View All</a>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+              {blogs.map((blog) => (
+                <motion.a 
+                  href={`/journal/${blog.slug}`} 
+                  key={blog.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  className="group"
+                >
+                  <div className="aspect-[16/9] overflow-hidden mb-6 bg-stone-50">
+                    <img 
+                      src={blog.featured_image} 
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                      alt={blog.title} 
+                    />
+                  </div>
+                  <p className="text-brand-gold text-[9px] tracking-[0.3em] uppercase mb-3 font-bold">{blog.category}</p>
+                  <h4 className="text-brand-maroon text-sm md:text-base leading-snug font-light uppercase tracking-wide max-w-[250px]">
+                    {blog.title}
+                  </h4>
+                </motion.a>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* TESTIMONIALS */}
         <section className="py-32 bg-white">

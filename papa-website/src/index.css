@@ -54,3 +54,7 @@
 ::-webkit-scrollbar-thumb {
   background: #4a0404; /* Brand Maroon */
 }
+
+.admin-input {
+  @apply border-b border-stone-200 py-4 outline-none focus:border-brand-gold transition-colors text-sm font-light;
+}

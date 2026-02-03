@@ -156,13 +156,24 @@ const Residential: React.FC = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Logic to advance by 2, wrapping back to 0 if we hit the end
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === carouselProperties.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => 
+      prev + 2 >= carouselProperties.length ? 0 : prev + 2
+    );
   };
 
   const prevSlide = () => {
-  setCurrentIndex((prev) => (prev === 0 ? carouselProperties.length - 1 : prev - 1));
+    setCurrentIndex((prev) => 
+      prev === 0 ? Math.floor((carouselProperties.length - 1) / 2) * 2 : prev - 2
+    );
   };
+
+  // Helper to get the pair of items
+  const visibleProperties = [
+    carouselProperties[currentIndex],
+    carouselProperties[currentIndex + 1]
+  ].filter(Boolean); // Filter handles odd-numbered arrays so it doesn't crash
 
   return (
     <div className="bg-white pt-32 min-h-screen">
@@ -189,49 +200,50 @@ const Residential: React.FC = () => {
             <div className="w-12 h-[1px] bg-brand-gold mx-auto"></div>
           </div>
 
-          <div className="relative h-[600px] w-full group">
+          <div className="relative min-h-[600px] w-full group">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
-                initial={{ opacity: 0, x: 100 }}
+                initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
+                exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="absolute inset-0 flex flex-col lg:flex-row gap-12"
+                className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full"
               >
-                {/* Image Side */}
-                <div className="flex-[1.5] relative overflow-hidden shadow-2xl">
-                  <img 
-                    src={carouselProperties[currentIndex].image} 
-                    className="w-full h-full object-cover"
-                    alt={carouselProperties[currentIndex].title}
-                  />
-                  <div className="absolute inset-0 bg-brand-maroon/5"></div>
-                </div>
+                {visibleProperties.map((prop) => (
+                  <div key={prop.id} className="flex flex-col">
+                    {/* Image Box */}
+                    <div className="relative aspect-[16/10] overflow-hidden shadow-xl mb-6 bg-stone-100">
+                      <img 
+                        src={prop.image} 
+                        className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                        alt={prop.title}
+                      />
+                      <div className="absolute inset-0 bg-brand-maroon/5"></div>
+                    </div>
 
-                {/* Text Side */}
-                <div className="flex-1 flex flex-col justify-center text-left">
-                  <motion.p 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 20 }}
-                    transition={{ delay: 0.3 }}
-                    className="text-brand-gold text-[10px] tracking-[0.4em] uppercase mb-6"
-                  >
-                    {carouselProperties[currentIndex].details}
-                  </motion.p>
-                  <h3 className="text-4xl md:text-5xl font-light tracking-tighter text-brand-maroon mb-6 uppercase leading-tight">
-                    {carouselProperties[currentIndex].title}
-                  </h3>
-                  <p className="text-2xl font-light text-gray-400 mb-10 tracking-widest">
-                    {carouselProperties[currentIndex].price}
-                  </p>
-                  <button className="btn-maroon self-start">View Gallery</button>
-                </div>
+                    {/* Text Details */}
+                    <div className="text-left">
+                      <p className="text-brand-gold text-[10px] tracking-[0.4em] uppercase mb-3 font-bold">
+                        {prop.details}
+                      </p>
+                      <h3 className="text-2xl md:text-3xl font-light tracking-widest text-brand-maroon mb-4 uppercase leading-tight">
+                        {prop.title}
+                      </h3>
+                      <p className="text-xl font-light text-gray-400 mb-6 tracking-widest">
+                        {prop.price}
+                      </p>
+                      <button className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all">
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </motion.div>
             </AnimatePresence>
 
             {/* Navigation Controls */}
-            <div className="absolute bottom-0 right-0 flex gap-4 z-20">
+            <div className="absolute -bottom-16 right-0 flex gap-4 z-20">
               <button 
                 onClick={prevSlide}
                 className="p-4 bg-white border border-gray-100 text-brand-maroon hover:bg-brand-maroon hover:text-white transition-all shadow-lg"

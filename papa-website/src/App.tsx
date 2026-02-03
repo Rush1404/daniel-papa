@@ -9,7 +9,9 @@ import Contact from './pages/Contact';
 import Yucatan from './pages/Yucatan';
 import PreConstruction from './pages/Ontario/PreConstruction';
 import Investment from './pages/Ontario/Investment';
-import Commercial from './pages/Ontario/Commercial';
+import Commercial from './pages/Ontario/Commercial'
+import AdminPortal from './pages/AdminPortal';
+import BlogPost from './pages/BlogPost';
 import { Instagram, Facebook, Linkedin} from 'lucide-react';
 
 const App: React.FC = () => {
@@ -33,7 +35,12 @@ const App: React.FC = () => {
         <Route path="/commercial" element={<Commercial />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/yucatan" element={<Yucatan />} />
+        <Route path="/internal-portal" element={<AdminPortal />} />
+        {/* DYNAMIC BLOG ROUTE */}
+        <Route path="/journal/:slug" element={<BlogPost />} />
       </Routes>
+
+      
 
       {/* Persistent Footer using Daniel's branding */}
       <footer className="bg-black py-24 px-6 lg:px-12 border-t border-white/5 text-white">
