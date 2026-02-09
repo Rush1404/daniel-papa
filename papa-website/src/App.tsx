@@ -12,6 +12,7 @@ import Investment from './pages/Ontario/Investment';
 import Commercial from './pages/Ontario/Commercial'
 import AdminPortal from './pages/AdminPortal';
 import BlogPost from './pages/BlogPost';
+import Insights from './pages/Insights';
 import { Instagram, Facebook, Linkedin} from 'lucide-react';
 
 const App: React.FC = () => {
@@ -36,6 +37,7 @@ const App: React.FC = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/yucatan" element={<Yucatan />} />
         <Route path="/internal-portal" element={<AdminPortal />} />
+        <Route path="/insights" element={<Insights />} />
         {/* DYNAMIC BLOG ROUTE */}
         <Route path="/journal/:slug" element={<BlogPost />} />
       </Routes>
@@ -96,7 +98,7 @@ const App: React.FC = () => {
             <div className="text-white/30 text-[9px] tracking-[0.25em] uppercase leading-loose font-light">
               <p className="mb-1">Brokerage</p>
               <p className="max-w-[250px] md:ml-auto">
-                501 Queen St W Suite 200, <br/> Toronto, ON M5V 2B4
+                18 Wynford Drive #214, <br/> Toronto, ON M3C 3S2
               </p>
             </div>
             
@@ -108,7 +110,7 @@ const App: React.FC = () => {
         </div>
 
         {/* BOTTOM BAR */}
-        <div className="max-w-7xl mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[8px] tracking-[0.3em] text-white/20 uppercase">
+        <div className="max-w-7xl mx-auto mt-4 pt-2 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[8px] tracking-[0.3em] text-white/20 uppercase">
           <p>© 2026 Daniel Papa Real Estate. All Rights Reserved.</p>
           <div className="flex gap-8">
             <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>

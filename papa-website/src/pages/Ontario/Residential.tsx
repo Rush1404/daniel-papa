@@ -189,7 +189,7 @@ const Residential: React.FC = () => {
           <button className="btn-maroon">Book a Call with Daniel</button>
         </motion.div>
         <motion.div {...sideFade('right')} className="flex-1 order-1 lg:order-2 aspect-[4/5] lg:aspect-square overflow-hidden shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200" className="w-full h-full object-cover" alt="Residential Hero" />
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600" className="w-full h-full object-cover" alt="Residential Hero" />
         </motion.div>
       </section>
 

@@ -9,6 +9,8 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+import phoneImage from "../assets/Downtown_Toronto.jpg";
+
 // --- Types & Data ---
 interface Category {
   title: string;
@@ -20,16 +22,16 @@ interface Category {
 
 const categories: Category[] = [
   { title: 'RESIDENTIAL', desc: "Thoughtful strategy and strong negotiation to ensure your biggest move is your best move.", img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800', tag: 'EXPLORE HOMES', path: '/residential' },
-  { title: 'INVESTMENT & MULTI-FAMILY', desc: "Transform real estate into a powerful tool for your financial legacy, both locally and abroad.", img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800', tag: 'EXPLORE INVESTMENT OPPORTUNITIES ' },
+  { title: 'INVESTMENT', desc: "Empowering your business growth through expert negotiation and deep-rooted local market knowledge.", img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800', tag: 'EXPLORE COMMERCIAL' },
+  { title: 'MULTI-FAMILY', desc: "Transform real estate into a powerful tool for your financial legacy, both locally and abroad.", img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800', tag: 'EXPLORE INVESTMENT OPPORTUNITIES ' },
   { title: 'PRE-CONSTRUCTION ', desc: "Move beyond speculation with expert clarity on location, reputation, and long-term appreciation.", img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800', tag: 'EXPLORE DEVELOPMENTS' },
-  { title: 'INVESTMENT', desc: "Empowering your business growth through expert negotiation and deep-rooted local market knowledge.", img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800', tag: 'EXPLORE COMMERCIAL' }
 ];
 
 const listings = [
-  { id: 1, title: "611 COLLEGE STREET WEST", price: "$1.1M", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800", tag: "Pre-Construction" },
-  { id: 2, title: "800 LAWRENCE AVE W", price:"$3.1M", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800", tag: "Investment" },
-  { id: 3, title: "WESTSHORE, LONG BRANCH", price:"$2.2M", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800", tag: "Commerical" },
-  { id: 4, title: "Forest Hill Classic", price: "$7.1M", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800", tag: "Residential" }
+  { id: 1, title: "611 COLLEGE STREET WEST", price: "$1.1M", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800", tag: "Pre-Construction", beds: 6, baths: 8, sqft: 12000 },
+  { id: 2, title: "800 LAWRENCE AVE W", price:"$3.1M", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800", tag: "Investment", beds: 3, baths: 4, sqft: 3500 },
+  { id: 3, title: "WESTSHORE, LONG BRANCH", price:"$2.2M", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800", tag: "Commerical", beds: 5, baths: 6, sqft: 7800 },
+  { id: 4, title: "Forest Hill Classic", price: "$7.1M", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800", tag: "Residential", beds: 5, baths: 7, sqft: 9200 }
 ];
 
 const testimonials = [
@@ -54,8 +56,6 @@ const sideFade = (direction: 'left' | 'right') => ({
   transition: { duration: 1.2, ease: "easeOut" as const },
   viewport: { once: false, amount: 0.2 }
 });
-
-
 
 // --- Main App Component ---
 const App: React.FC = () => {
@@ -96,41 +96,53 @@ const App: React.FC = () => {
     fetchBlogs();
   }, []);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check screen size on mount and resize
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const webImage = "https://images.unsplash.com/photo-1546614409-810f10108b74?q=80&w=2066&auto=format&fit=crop";
+
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-brand-gold selection:text-white overflow-x-hidden">
       <Navbar />
 
       <main>
-        {/* LIGHT THEME HERO SECTION */}
+        {/* LIGHT THEME HERO SECTION - Left Aligned */}
         <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-white">
           {/* BACKGROUND LAYERS */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.5 }}
-            className="absolute inset-0 pointer-events-none" // Added pointer-events-none so it doesn't block clicks
+            className="absolute inset-0 pointer-events-none"
           >
             {/* 1. The Image - Much lower opacity for bright, subtle feel */}
             <img 
               src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600" 
-              className="w-full h-full object-cover opacity-60" // Reduced opacity significantly
+              className="w-full h-full object-cover opacity-60"
               alt="Luxury Interior" 
             />
             {/* 2. Stronger White Overlay */}
-            <div className="absolute inset-0 bg-white/70"></div> {/* Increased strength of white overlay */}
-            {/* 3. Subtle Gradient to ensure bottom text is readable */}
+            <div className="absolute inset-0 bg-white/70"></div>
+            {/* 3. Subtle Gradient to ensure text readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
           </motion.div>
 
-          {/* CONTENT CONTENT - Right-Aligned Editorial Layout */}
-          <div className="relative z-20 w-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col items-end justify-center h-full">
+          {/* CONTENT CONTENT - Left-Aligned Editorial Layout */}
+          <div className="relative z-20 w-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col items-start justify-center h-full"> {/* CHANGED: items-end -> items-start */}
             
             {/* Header Stack */}
             <motion.div 
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: -30 }} // CHANGED: x: 30 -> x: -30 (Slide from left)
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="text-right mb-8"
+              className="text-left mb-8"
             >
               <h1 className="text-brand-maroon text-5xl md:text-8xl font-light tracking-tighter uppercase leading-[0.9] drop-shadow-sm flex flex-col">
                 <span>Lifestyle.</span>
@@ -144,22 +156,22 @@ const App: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="text-gray-700 font-medium text-sm md:text-base mb-12 text-right max-w-md leading-relaxed"
+              className="text-gray-700 font-medium text-sm md:text-base mb-12 text-left max-w-md leading-relaxed" // CHANGED: text-right -> text-left
             >
               Every stage of life deserves a real estate strategy that prioritizes your lifestyle.
               By combining your vision with my 15 years of proven strategic real estate market expertise,
               your next move will be as rewarding as it is seamless. 
             </motion.p>
             
-            {/* Buttons Container - Also Right Aligned */}
+            {/* Buttons Container - Left Aligned */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.8 }}
-              className="flex flex-col md:flex-row gap-6 justify-end items-center"
+              className="flex flex-col md:flex-row gap-6 justify-start items-center" // CHANGED: justify-end -> justify-start
             >
-              <button className="btn-maroon">View Listings</button>
-              <a className="btn-gold" href="/meet-daniel">Book a Call</a>
+              <button className="btn-maroon">Ontario, CA</button>
+              <a className="btn-gold" href="/meet-daniel">Yucatán, México</a>
             </motion.div>
           </div>
         </section>
@@ -228,7 +240,7 @@ const App: React.FC = () => {
             {/* The 3-Column Carousel */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <AnimatePresence mode="popLayout" initial={false}>
-                {visibleListings.map((item, idx) => (
+                {visibleListings.map((item) => (
                   <motion.div
                     key={item.id}
                     layout
@@ -249,9 +261,15 @@ const App: React.FC = () => {
                       </div>
                     </div>
                     
-                    <div className="space-y-1">
-                      <h4 className="text-brand-maroon text-xs tracking-[0.2em] uppercase font-medium">{item.title}</h4>
-                      <p className="text-gray-400 text-[10px] tracking-widest">{item.price}</p>
+                    <div className="space-y-2">
+                      {/* Property Details - Added above price */}
+                      <p className="text-brand-gold text-[9px] tracking-[0.3em] uppercase font-bold">
+                        {item.beds} BEDS | {item.baths} BATHS | {item.sqft.toLocaleString()} SQFT
+                      </p>
+                      <h4 className="text-brand-maroon text-sm md:text-base tracking-[0.2em] uppercase font-medium leading-snug">
+                        {item.title}
+                      </h4>
+                      <p className="text-gray-400 text-sm tracking-widest font-light">{item.price}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -295,14 +313,13 @@ const App: React.FC = () => {
         </section>
 
         {/* TESTIMONIALS */}
-        <section className="py-32 bg-white">
+        <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
             {/* Editorial Heading */}
-            <div className="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-gray-100 pb-12">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-14 border-b border-gray-100 pb-12">
               <div className="max-w-xl">
-                <h2 className="text-brand-maroon text-[10px] tracking-[0.5em] uppercase mb-6 font-bold">Client Experiences</h2>
                 <h3 className="text-4xl md:text-6xl font-light tracking-tighter text-black uppercase leading-tight">
-                  A Legacy of <br/> <span className="italic text-brand-gold">Excellence.</span>
+                  Client<span className="italic text-brand-gold"> Experiences.</span>
                 </h3>
               </div>
               
@@ -328,23 +345,17 @@ const App: React.FC = () => {
                     className="flex flex-col h-full group"
                   >
                     {/* Quotation Icon Accents */}
-                    <div className="text-brand-gold text-5xl font-serif mb-8 opacity-40">“</div>
+                    <div className="text-brand-gold text-5xl font-serif mb-4 opacity-40">“</div>
                     
-                    <p className="text-gray-600 leading-relaxed text-sm tracking-wide mb-12 flex-grow italic font-light">
+                    <p className="text-gray-600 leading-relaxed text-sm tracking-wide mb-6 flex-grow italic font-light">
                       {item.text}
                     </p>
                     
-                    <div className="flex items-center gap-5 pt-8 border-t border-gray-50">
-                      <div className="w-12 h-12 overflow-hidden bg-gray-100 grayscale group-hover:grayscale-0 transition-all duration-700">
-                        <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
-                      </div>
+                    <div className="flex items-center gap-5 pt-2 border-t border-gray-50">
                       <div className="leading-none">
                         <h4 className="text-[11px] tracking-[0.3em] font-bold text-brand-maroon uppercase mb-2">
                             {item.name}
                         </h4>
-                        <p className="text-[9px] tracking-[0.2em] text-brand-gold uppercase">
-                            {item.handle}
-                        </p>
                       </div>
                     </div>
                   </motion.div>
@@ -356,15 +367,54 @@ const App: React.FC = () => {
 
         {/* CTA*/}
         <section className="relative py-40 bg-black text-center text-white overflow-hidden">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 0.3 }} className="absolute inset-0">
-            <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200" className="w-full h-full object-cover" alt="Kitchen" />
+          {/* BACKGROUND IMAGE LAYER */}
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            whileInView={{ opacity: 0.4 }} 
+            className="absolute inset-0 pointer-events-none"
+          >
+            <img 
+              src={isMobile ? phoneImage : webImage} 
+              className="w-full h-full object-cover" 
+              alt="Toronto Skyline" 
+            />
+            {/* Added a dark overlay to ensure text contrast regardless of the image */}
+            <div className="absolute inset-0 bg-black/40"></div>
           </motion.div>
+
+          {/* CONTENT LAYER */}
           <div className="relative z-10 px-6">
-            <motion.h2 {...fadeInUp} className="text-4xl font-light tracking-[0.2em] mb-4 uppercase">Stay Informed.</motion.h2>
-            <motion.p {...fadeInUp} className="text-white/50 text-[10px] tracking-widest mb-12">Sign up for the latest market reports & industry updates.</motion.p>
-            <motion.div {...fadeInUp} className="flex flex-col md:flex-row max-w-md mx-auto gap-4">
-              <input type="email" placeholder="Email Address" className="flex-1 bg-white/5 border border-white/20 px-6 py-4 text-xs tracking-widest focus:outline-none focus:border-brand-gold text-white" />
-              <button className="bg-white text-black px-10 py-4 text-[10px] tracking-widest uppercase hover:bg-brand-gold hover:text-white transition-all">Sign Up</button>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="text-4xl font-light tracking-[0.2em] mb-4 uppercase"
+            >
+              Stay Informed.
+            </motion.h2>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-white/50 text-[10px] tracking-widest mb-12"
+            >
+              Sign up for the latest market reports & industry updates.
+            </motion.p>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex flex-col md:flex-row max-w-md mx-auto gap-4"
+            >
+              <input 
+                type="email" 
+                placeholder="Email Address" 
+                className="flex-1 bg-white/5 border border-white/20 px-6 py-4 text-xs tracking-widest focus:outline-none focus:border-brand-gold text-white" 
+              />
+              <button className="bg-white text-black px-10 py-4 text-[10px] tracking-widest uppercase hover:bg-brand-gold hover:text-white transition-all duration-500">
+                Sign Up
+              </button>
             </motion.div>
           </div>
         </section>

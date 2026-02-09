@@ -29,9 +29,9 @@ const Navbar: React.FC = () => {
   const navLinks = [
     { name: 'Meet Daniel', path: '/meet-daniel' },
     { name: 'My Approach', path: '/mission' },
-    { name: 'MLS Search', path: '/MLS' },
+    { name: 'Insights', path: '/insights' },
     { name: 'Ontario', path: '', dropdown: true },
-    { name: 'Yucatan', path: '/yucatan' },
+    { name: 'Yucátan', path: '/yucatan' },
   ];
 
   return (

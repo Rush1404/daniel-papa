@@ -54,7 +54,7 @@ const Mission: React.FC = () => {
           
           <motion.div {...fadeInUp} className="flex-1">
             <h2 className="text-brand-gold text-xs tracking-[0.5em] uppercase mb-6 font-bold">The Vision</h2>
-            <h3 className="text-brand-maroon text-4xl md:text-5xl font-light tracking-tight mb-8 uppercase">Proven Results. Scarborough Rooted. </h3>
+            <h3 className="text-brand-maroon text-4xl md:text-5xl font-light tracking-tight mb-8 uppercase">Built on 15 years of Experience, Not Promises.</h3>
             <p className="text-gray-600 leading-loose mb-8">
              Fifteen years of proven results. One seamless experience. I don't just close transactions; I help build your future. 
             </p>
@@ -71,7 +71,7 @@ const Mission: React.FC = () => {
             <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="text-center group">
               <div className="text-brand-gold text-4xl font-extralight mb-6">01</div>
               <h4 className="text-brand-maroon tracking-[0.2em] font-medium mb-4">INTEGRITY</h4>
-              <p className="text-gray-500 text-sm leading-relaxed">Complete transparency and uncompromising advocacy, pricing honesty and ensuring your interests are protected at every turn.</p>
+              <p className="text-gray-500 text-sm leading-relaxed">Advice you can trust. Every step.</p>
             </motion.div>
 
             <motion.div {...fadeInUp} transition={{ delay: 0.4 }} className="text-center group">
@@ -83,7 +83,7 @@ const Mission: React.FC = () => {
             <motion.div {...fadeInUp} transition={{ delay: 0.6 }} className="text-center group">
               <div className="text-brand-gold text-4xl font-extralight mb-6">03</div>
               <h4 className="text-brand-maroon tracking-[0.2em] font-medium mb-4">COMMUNITY</h4>
-              <p className="text-gray-500 text-sm leading-relaxed"> Cultivating trusted partnerships across borders, consistency, and a legacy of results.</p>
+              <p className="text-gray-500 text-sm leading-relaxed"> Built on relationships, not transactions.</p>
             </motion.div>
           </div>
         </div>

@@ -18,6 +18,27 @@ const fadeInUpProps: HTMLMotionProps<"div"> = {
   viewport: { once: true, amount: 0.1 }
 };
 
+const pillars = [
+  {
+    id: "01",
+    title: "Global Perspective.",
+    subtitle: "The Builder's Eye",
+    description: "15 years of GTA mastery combined with international development experience. Daniel identifies structural integrity and navigates complex permits with a level of scrutiny most agents lack."
+  },
+  {
+    id: "02",
+    title: "Investor's Edge.",
+    subtitle: "Multi-Asset Strategy",
+    description: "More than a Realtor, a sophisticated asset strategist. From real estate to high-stakes markets, Daniel analyzes hidden value and negotiates with a precision that protects your bottom line."
+  },
+  {
+    id: "03",
+    title: "Unwavering Discipline.",
+    subtitle: "Family-First Philosophy",
+    description: "Rooted in heritage and driven by a competitive spirit. You gain a transparent, highly adaptable partner who treats your investment with the same rigor he applies to his own family's wealth."
+  }
+];
+
 const Yucatan: React.FC = () => {
   return (
     <LazyMotion features={domMax}>
@@ -54,13 +75,13 @@ const Yucatan: React.FC = () => {
               transition={{ delay: 0.3 }} 
               className="text-white/90 text-sm md:text-base tracking-[0.5em] uppercase"
             >
-              Progreso, Yucatan, Mexico
+              Progreso, Yucatán, México
             </motion.p>
           </div>
         </section>
 
         {/* INVESTMENT SNAPSHOT */}
-        <section className="py-24 px-6 lg:px-12 max-w-7xl mx-auto">
+        <section className="pt-24 pb-8 px-6 lg:px-12 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <motion.div {...fadeInUpProps}>
               <h2 className="text-brand-gold text-[10px] tracking-[0.5em] uppercase mb-6 font-bold">Investment Opportunity</h2>
@@ -68,7 +89,7 @@ const Yucatan: React.FC = () => {
                 A Masterpiece <br/> of Coastal Living.
               </h3>
               <p className="text-gray-600 leading-relaxed mb-8">
-                Casa Aida represents a unique opportunity to invest in the rapidly growing market of Progreso, Yucatan.
+                Casa Aida represents a unique opportunity to invest in the rapidly growing market of Progreso, Yucátan.
               </p>
               <div className="flex gap-12 border-t border-gray-100 pt-8">
                 <div>
@@ -79,6 +100,11 @@ const Yucatan: React.FC = () => {
                   <p className="text-brand-maroon font-bold text-xl">2027</p>
                   <p className="text-[10px] text-gray-400 tracking-widest uppercase">Completion Date</p>
                 </div>
+              </div>
+              <div className="mt-16">
+                <a href="/contact" className="btn-gold w-full md:w-auto">
+                  Explore Yucatán, México
+                </a>
               </div>
             </motion.div>
 
@@ -95,7 +121,7 @@ const Yucatan: React.FC = () => {
         </section>
 
         {/* INTERIOR GALLERY SECTION */}
-        <section className="py-32 px-6 lg:px-12 bg-white">
+        <section className="py-20 px-6 lg:px-12 bg-white">
           <div className="max-w-7xl mx-auto">
             <div className="mb-20">
               <h2 className="text-brand-gold text-[10px] tracking-[0.5em] uppercase mb-4 font-bold">The Interiors</h2>
@@ -147,12 +173,12 @@ const Yucatan: React.FC = () => {
         </section>
 
         {/* WHY YUCATAN? GRID */}
-        <section className="py-32 bg-gray-50">
+        <section className="py-24 bg-gray-50">
           <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center">
-            <h2 className="text-brand-maroon text-xs tracking-[0.5em] uppercase mb-20 font-bold">Why Yucatan?</h2>
+            <h2 className="text-brand-maroon text-xs tracking-[0.5em] uppercase mb-20 font-bold">Why Yucatán?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-left">
               {[
-                { title: "Economic Growth", desc: "The Yucatan Peninsula is experiencing a massive influx of infrastructure investment." },
+                { title: "Economic Growth", desc: "The Yucatán Peninsula is experiencing a massive influx of infrastructure investment." },
                 { title: "Tourism Boom", desc: "Progreso is becoming a preferred destination for international travelers." },
                 { title: "Lifestyle Value", desc: "Unrivaled quality of life with world-class beaches and culture." }
               ].map((item, i) => (
@@ -166,19 +192,51 @@ const Yucatan: React.FC = () => {
           </div>
         </section>
 
-        {/* FINAL REGISTRATION SECTION */}
-        <section className="py-32 px-6 lg:px-12 bg-white text-center">
-          <motion.div {...fadeInUpProps} className="max-w-3xl mx-auto">
-            <h2 className="text-brand-maroon text-4xl font-light tracking-tight mb-8 uppercase">Request the <span className="italic">Casa Aida</span> Investor Kit</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              <input type="text" placeholder="First Name" className="border-b border-gray-200 py-4 outline-none focus:border-brand-gold transition-colors" />
-              <input type="text" placeholder="Last Name" className="border-b border-gray-200 py-4 outline-none focus:border-brand-gold transition-colors" />
+        <section className="py-24 bg-stone-50 border-t border-stone-200">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+              <h2 className="text-brand-maroon text-xs tracking-[0.5em] uppercase mb-20 font-bold">Why Daniel?</h2>
             </div>
-            <input type="email" placeholder="Email Address" className="w-full border-b border-gray-200 py-4 outline-none focus:border-brand-gold transition-colors mb-12" />
-            <button className="px-16 py-5 bg-brand-maroon text-white text-[10px] tracking-[0.5em] uppercase font-bold hover:bg-brand-gold transition-all duration-500 shadow-xl">
-              Download Investor Kit
-            </button>
-          </motion.div>
+            
+
+            {/* 3 Pillars Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3">
+              {pillars.map((pillar, index) => (
+                <motion.div
+                  key={pillar.id}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2, duration: 0.8 }}
+                  className={`relative p-8 md:p-12 group hover:bg-white transition-colors duration-500 ${
+                    index !== 0 ? 'md:border-l border-stone-200' : ''
+                  } ${index !== 2 ? 'border-b md:border-b-0 border-stone-200' : ''}`}
+                >
+                  {/* Content */}
+                  <div className="relative z-10">
+                    <h3 className="text-brand-maroon text-2xl font-light uppercase tracking-wide mb-2">
+                      {pillar.title}
+                    </h3>
+                    <p className="text-xs text-brand-gold uppercase tracking-[0.2em] mb-8 font-bold">
+                      {pillar.subtitle}
+                    </p>
+                    <p className="text-gray-600 text-sm leading-7 font-light">
+                      {pillar.description}
+                    </p>
+                  </div>
+
+                  {/* Hover Line Animation */}
+                  <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-maroon group-hover:w-full transition-all duration-700 ease-out" />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Call to Action */}
+            <div className="mt-16 text-center">
+              <a href="/contact" className="inline-block border-b border-brand-maroon text-brand-maroon text-[10px] tracking-[0.3em] uppercase pb-1 hover:text-brand-gold hover:border-brand-gold transition-all">
+                Book a Call with Daniel
+              </a>
+            </div>
+          </div>
         </section>
       </div>
     </LazyMotion>
