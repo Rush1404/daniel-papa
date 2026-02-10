@@ -27,6 +27,7 @@ const Insights: React.FC = () => {
       const { data, error } = await supabase
         .from('blogs')
         .select('*')
+        .eq('is_hidden', false)
         .order('created_at', { ascending: false });
 
       if (!error && data) {
@@ -77,25 +78,8 @@ const Insights: React.FC = () => {
           transition={{ delay: 0.1 }}
           className="text-5xl md:text-7xl font-light text-brand-maroon uppercase tracking-tight mb-12"
         >
-          Market Insights & <br/> <span className="italic">Strategic Living</span>
+          Insights & <br/> <span className="italic">Strategic Living</span>
         </motion.h1>
-
-        {/* Category Filter Bar */}
-        <div className="flex flex-wrap justify-center gap-8 border-b border-stone-100 pb-6">
-          {categories.map((cat, idx) => (
-            <button
-              key={idx}
-              onClick={() => filterPosts(cat)}
-              className={`text-[10px] tracking-[0.3em] uppercase transition-all duration-300 ${
-                activeCategory === cat 
-                  ? 'text-brand-maroon border-b border-brand-maroon pb-1 font-bold' 
-                  : 'text-gray-400 hover:text-brand-maroon'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
       </section>
 
       {/* 2. The Blog Grid */}
@@ -163,7 +147,7 @@ const Insights: React.FC = () => {
                       </p>
 
                       <div className="pt-4">
-                         <span className="text-[9px] tracking-[0.3em] uppercase border-b border-stone-200 pb-1 group-hover:border-brand-maroon transition-all">Read Editorial</span>
+                         <span className="text-[9px] tracking-[0.3em] uppercase border-b border-stone-200 pb-1 group-hover:border-brand-maroon transition-all">Read Insights</span>
                       </div>
                     </div>
                   </Link>

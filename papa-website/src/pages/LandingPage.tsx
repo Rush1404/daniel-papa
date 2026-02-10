@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,  } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
@@ -16,15 +17,14 @@ interface Category {
   title: string;
   desc: string;
   img: string;
-  tag: string;
-  path?: string;
+  path: string;
 }
 
 const categories: Category[] = [
-  { title: 'RESIDENTIAL', desc: "Thoughtful strategy and strong negotiation to ensure your biggest move is your best move.", img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800', tag: 'EXPLORE HOMES', path: '/residential' },
-  { title: 'INVESTMENT', desc: "Empowering your business growth through expert negotiation and deep-rooted local market knowledge.", img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800', tag: 'EXPLORE COMMERCIAL' },
-  { title: 'MULTI-FAMILY', desc: "Transform real estate into a powerful tool for your financial legacy, both locally and abroad.", img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800', tag: 'EXPLORE INVESTMENT OPPORTUNITIES ' },
-  { title: 'PRE-CONSTRUCTION ', desc: "Move beyond speculation with expert clarity on location, reputation, and long-term appreciation.", img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800', tag: 'EXPLORE DEVELOPMENTS' },
+  { title: 'RESIDENTIAL', desc: "Thoughtful strategy and strong negotiation to ensure your biggest move is your best move.", img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800', path: '/residential' },
+  { title: 'INVESTMENT & MULTI-FAMILY', desc: "Transform real estate into a powerful tool for your financial legacy, both locally and abroad.", img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800', path: '/investment' },
+  { title: 'PRE-CONSTRUCTION ', desc: "Move beyond speculation with expert clarity on location, reputation, and long-term appreciation.", img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800', path: '/pre-construction' },
+  { title: 'COMMERCIAL', desc: "Empowering your business growth through expert negotiation and deep-rooted local market knowledge.", img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800', path: '/commercial' },
 ];
 
 const listings = [
@@ -90,7 +90,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      const { data } = await supabase.from('blogs').select('*').order('created_at', { ascending: false }).limit(3);
+      const { data } = await supabase.from('blogs').select('*').eq('is_hidden', false).order('created_at', { ascending: false }).limit(3);
       if (data) setBlogs(data);
     };
     fetchBlogs();
@@ -156,7 +156,7 @@ const App: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="text-gray-700 font-medium text-sm md:text-base mb-12 text-left max-w-md leading-relaxed" // CHANGED: text-right -> text-left
+              className="text-sm tracking-widest font-light mb-12 text-left max-w-md tracking-widest" // CHANGED: text-right -> text-left
             >
               Every stage of life deserves a real estate strategy that prioritizes your lifestyle.
               By combining your vision with my 15 years of proven strategic real estate market expertise,
@@ -170,8 +170,8 @@ const App: React.FC = () => {
               transition={{ delay: 1, duration: 0.8 }}
               className="flex flex-col md:flex-row gap-6 justify-start items-center" // CHANGED: justify-end -> justify-start
             >
-              <button className="btn-maroon">Ontario, CA</button>
-              <a className="btn-gold" href="/meet-daniel">Yucatán, México</a>
+              <a className="btn-maroon" href="/investment">Ontario, Canada</a>
+              <a className="btn-gold" href="/yucatan">Yucatán, México</a>
             </motion.div>
           </div>
         </section>
@@ -184,12 +184,15 @@ const App: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {categories.map((cat, i) => (
               <motion.div key={i} {...fadeInUp} transition={{ ...fadeInUp.transition, delay: i * 0.1 }} className="text-center group">
-                <div className="overflow-hidden mb-6 aspect-[4/5]">
-                  <img src={cat.img} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt={cat.title} />
-                </div>
-                <h3 className="text-brand-maroon tracking-[0.3em] font-medium mb-3 text-sm">{cat.title}</h3>
-                <p className="text-gray-500 text-xs leading-relaxed mb-6 px-4">{cat.desc}</p>
-                <button className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold pb-1 hover:text-brand-gold">{cat.tag}</button>
+              <Link to={cat.path} className="block overflow-hidden mb-6 aspect-[4/5]">
+                  <img 
+                    src={cat.img} 
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-out" 
+                    alt={cat.title} 
+                  />
+                </Link>
+                <a className="text-brand-maroon tracking-[0.3em] font-medium mb-5 text-sm border-brand-gold hover:text-brand-gold" href={cat.path}>{cat.title}</a>
+                <p className="text-gray-500 text-xs leading-relaxed mt-3 mb-6 px-4">{cat.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -282,7 +285,7 @@ const App: React.FC = () => {
         <section className="py-24 bg-white border-b border-stone-100">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <div className="flex items-baseline justify-between mb-16">
-              <h3 className="text-brand-maroon text-2xl font-light tracking-tight uppercase italic">Insights & Editorial</h3>
+              <h3 className="text-brand-maroon text-2xl font-light tracking-tight uppercase italic">Insights</h3>
               <a href="" className="text-[9px] tracking-[0.4em] uppercase border-b border-brand-gold pb-1 hover:text-brand-gold transition-colors">View All</a>
             </div>
 

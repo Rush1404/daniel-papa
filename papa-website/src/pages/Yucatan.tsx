@@ -178,9 +178,9 @@ const Yucatan: React.FC = () => {
             <h2 className="text-brand-maroon text-xs tracking-[0.5em] uppercase mb-20 font-bold">Why Yucatán?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-left">
               {[
-                { title: "Economic Growth", desc: "The Yucatán Peninsula is experiencing a massive influx of infrastructure investment." },
-                { title: "Tourism Boom", desc: "Progreso is becoming a preferred destination for international travelers." },
-                { title: "Lifestyle Value", desc: "Unrivaled quality of life with world-class beaches and culture." }
+                { title: "Safety", desc: "According to CEOWORLD Magazine, the Progreso & Mérida corridor represents a global benchmark for safety; consistently outranking nearly every major city across the Continental Americas, it stands as the second most secure metropolitan region in the Western Hemisphere, outpaced only by Quebec City. " },
+                { title: "Stability", desc: "The Yucatán, specifically Progreso and Mérida have emerged as one of Mexico's most stable and attractive real estate markets, driven by infrastructure investment, international demand, and long-term economic growth." },
+                { title: "Lifestyle Value", desc: "With increasing interest from North American buyers, the region offers a rare balance of affordability, stability, and upside potential." }
               ].map((item, i) => (
                 <div key={i}>
                   <p className="text-brand-gold text-2xl mb-4 font-light italic">0{i + 1}.</p>

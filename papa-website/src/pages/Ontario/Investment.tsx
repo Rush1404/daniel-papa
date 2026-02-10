@@ -1,30 +1,16 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { supabase } from '../../components/supabaseClient';
 
-const carouselProperties = [
-  {
-    id: 1,
-    title: "THE ANNEX SIX-PLEX",
-    price: "$6,850,000",
-    image: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?q=80&w=2070&auto=format&fit=crop",
-    details: "6 UNITS | 5.2% CAP RATE | FULLY TENANTED"
-  },
-  {
-    id: 2,
-    title: "HIGH PARK MULTI-FAMILY",
-    price: "$4,200,000",
-    image: "https://images.unsplash.com/photo-1644984105141-4e3cdb78ecae?q=80&w=2070&auto=format&fit=crop",
-    details: "4 UNITS | RECENTLY RENOVATED | PREMIUM RENTS"
-  },
-  {
-    id: 3,
-    title: "STRATEGIC INFILL PROJECT",
-    price: "$2,900,000",
-    image: "https://images.unsplash.com/photo-1628744448838-c04e09b1ba03?q=80&w=2070&auto=format&fit=crop",
-    details: "DEVELOPMENT SITE | ZONED FOR 8 UNITS"
-  }
-];
+// Define Interface
+interface Property {
+  id: string;
+  title: string;
+  price: string;
+  image: string;
+  details: string;
+}
 
 // --- Sub-Component for individual Cards ---
 // const ListingCard = ({ property, delay }: { property: any, delay: number }) => {
@@ -111,26 +97,44 @@ const Investment: React.FC = () => {
     viewport: { once: false }
   };
 
+  const [properties, setProperties] = useState<Property[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  // Logic to advance by 2, wrapping back to 0 if we hit the end
+  // FETCH DATA FROM SUPABASE
+  useEffect(() => {
+    const fetchProperties = async () => {
+      const { data } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('category', 'Investment') 
+        .eq('is_hidden', false)
+        .order('created_at', { ascending: false });
+      
+      if (data) setProperties(data);
+      setLoading(false);
+    };
+
+    fetchProperties();
+  }, []);
+
+  // CAROUSEL LOGIC
   const nextSlide = () => {
     setCurrentIndex((prev) => 
-      prev + 2 >= carouselProperties.length ? 0 : prev + 2
+      prev + 2 >= properties.length ? 0 : prev + 2
     );
   };
 
   const prevSlide = () => {
     setCurrentIndex((prev) => 
-      prev === 0 ? Math.floor((carouselProperties.length - 1) / 2) * 2 : prev - 2
+      prev === 0 ? Math.floor((properties.length - 1) / 2) * 2 : prev - 2
     );
   };
 
-  // Helper to get the pair of items
-  const visibleProperties = [
-    carouselProperties[currentIndex],
-    carouselProperties[currentIndex + 1]
-  ].filter(Boolean); // Filter handles odd-numbered arrays so it doesn't crash
+  const visibleProperties = properties.length > 0 ? [
+    properties[currentIndex],
+    properties[currentIndex + 1]
+  ].filter(Boolean) : [];
 
   return (
     <div className="bg-white pt-32 min-h-screen">
@@ -159,69 +163,64 @@ const Investment: React.FC = () => {
 
       <section className="py-24 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          
           <div className="text-center mb-16">
             <h2 className="text-brand-maroon text-xs tracking-[0.5em] uppercase mb-4">Featured Collection</h2>
             <div className="w-12 h-[1px] bg-brand-gold mx-auto"></div>
           </div>
 
-          <div className="relative min-h-[600px] w-full group">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full"
-              >
-                {visibleProperties.map((prop) => (
-                  <div key={prop.id} className="flex flex-col">
-                    {/* Image Box */}
-                    <div className="relative aspect-[16/10] overflow-hidden shadow-xl mb-6 bg-stone-100">
-                      <img 
-                        src={prop.image} 
-                        className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
-                        alt={prop.title}
-                      />
-                      <div className="absolute inset-0 bg-brand-maroon/5"></div>
+          {loading ? (
+             <div className="text-center text-gray-400 py-20">Loading Exclusive Listings...</div>
+          ) : properties.length === 0 ? (
+             <div className="text-center text-gray-400 py-20">No Current Commercial Listings Available.</div>
+          ) : (
+            <div className="relative min-h-[600px] w-full group">
+                <AnimatePresence mode="wait">
+                <motion.div
+                    key={currentIndex}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full"
+                >
+                    {visibleProperties.map((prop) => (
+                    <div key={prop.id} className="flex flex-col">
+                        <div className="relative aspect-[16/10] overflow-hidden shadow-xl mb-6 bg-stone-100">
+                        <img 
+                            src={prop.image} 
+                            className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                            alt={prop.title}
+                        />
+                        </div>
+                        <div className="text-left">
+                        <p className="text-brand-gold text-[10px] tracking-[0.4em] uppercase mb-3 font-bold">
+                            {prop.details}
+                        </p>
+                        <h3 className="text-2xl md:text-3xl font-light tracking-widest text-brand-maroon mb-4 uppercase leading-tight">
+                            {prop.title}
+                        </h3>
+                        <p className="text-xl font-light text-gray-400 mb-6 tracking-widest">
+                            {prop.price}
+                        </p>
+                        <button className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all">
+                            View Details
+                        </button>
+                        </div>
                     </div>
+                    ))}
+                </motion.div>
+                </AnimatePresence>
 
-                    {/* Text Details */}
-                    <div className="text-left">
-                      <p className="text-brand-gold text-[10px] tracking-[0.4em] uppercase mb-3 font-bold">
-                        {prop.details}
-                      </p>
-                      <h3 className="text-2xl md:text-3xl font-light tracking-widest text-brand-maroon mb-4 uppercase leading-tight">
-                        {prop.title}
-                      </h3>
-                      <p className="text-xl font-light text-gray-400 mb-6 tracking-widest">
-                        {prop.price}
-                      </p>
-                      <button className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all">
-                        View Details
-                      </button>
+                {/* Navigation Controls */}
+                {properties.length > 2 && (
+                    <div className="absolute -bottom-16 right-0 flex gap-4 z-20">
+                    <button onClick={prevSlide} className="p-4 bg-white border border-gray-100 text-brand-maroon hover:bg-brand-maroon hover:text-white transition-all shadow-lg"><ChevronLeft size={20} /></button>
+                    <button onClick={nextSlide} className="p-4 bg-white border border-gray-100 text-brand-maroon hover:bg-brand-maroon hover:text-white transition-all shadow-lg"><ChevronRight size={20} /></button>
                     </div>
-                  </div>
-                ))}
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Navigation Controls */}
-            <div className="absolute -bottom-16 right-0 flex gap-4 z-20">
-              <button 
-                onClick={prevSlide}
-                className="p-4 bg-white border border-gray-100 text-brand-maroon hover:bg-brand-maroon hover:text-white transition-all shadow-lg"
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <button 
-                onClick={nextSlide}
-                className="p-4 bg-white border border-gray-100 text-brand-maroon hover:bg-brand-maroon hover:text-white transition-all shadow-lg"
-              >
-                <ChevronRight size={20} />
-              </button>
+                )}
             </div>
-          </div>
+          )}
         </div>
       </section>
     </div>
