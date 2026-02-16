@@ -62,15 +62,6 @@ const App: React.FC = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [startIndex, setStartIndex] = useState(0);
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1 >= listings.length ? 0 : prev + 1));
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? listings.length - 1 : prev - 1));
-  };
 
   // Logic to show 3 items starting from currentIndex, wrapping around the end
   const visibleListings = [
@@ -79,23 +70,56 @@ const App: React.FC = () => {
     listings[(currentIndex + 2) % listings.length],
   ];
 
-  // Logic to get exactly 3 visible cards in a circular fashion
-  const visibleTestimonials = [
-    testimonials[startIndex % testimonials.length],
-    testimonials[(startIndex + 1) % testimonials.length],
-    testimonials[(startIndex + 2) % testimonials.length]
-  ];
-
   const [blogs, setBlogs] = useState<any[]>([]);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [startIndex, setStartIndex] = useState(0);
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      const { data } = await supabase.from('blogs').select('*').eq('is_hidden', false).order('created_at', { ascending: false }).limit(3);
-      if (data) setBlogs(data);
+    const fetchLandingData = async () => {
+      setLoading(true);
+      const [blogsRes, testimonialsRes] = await Promise.all([
+        supabase
+          .from('blogs')
+          .select('*')
+          .eq('is_hidden', false)
+          .order('created_at', { ascending: false })
+          .limit(3),
+        supabase
+          .from('testimonials')
+          .select('*')
+          .eq('is_hidden', false)
+          .order('created_at', { ascending: false })
+      ]);
+
+      if (blogsRes.data) setBlogs(blogsRes.data);
+      if (testimonialsRes.data) setTestimonials(testimonialsRes.data);
+      setLoading(false);
     };
-    fetchBlogs();
+
+    fetchLandingData();
   }, []);
 
+  // SAFE CALCULATION: Only calculate if testimonials has items
+  const visibleTestimonials = testimonials.length > 0 
+    ? [
+        testimonials[startIndex % testimonials.length],
+        testimonials[(startIndex + 1) % testimonials.length],
+        testimonials[(startIndex + 2) % testimonials.length]
+      ].filter(Boolean) // filter(Boolean) handles cases where you have fewer than 3 testimonials
+    : [];
+
+  const nextSlide = () => {
+    if (testimonials.length > 0) {
+      setStartIndex((prev) => (prev + 1) % testimonials.length);
+    }
+  };
+
+  const prevSlide = () => {
+    if (testimonials.length > 0) {
+      setStartIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+    }
+  };
   const [isMobile, setIsMobile] = useState(false);
 
   // Check screen size on mount and resize
@@ -105,6 +129,8 @@ const App: React.FC = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  
 
   const webImage = "https://images.unsplash.com/photo-1546614409-810f10108b74?q=80&w=2066&auto=format&fit=crop";
 

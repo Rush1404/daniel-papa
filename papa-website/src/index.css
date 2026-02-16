@@ -58,3 +58,58 @@
 .admin-input {
   @apply border-b border-stone-200 py-4 outline-none focus:border-brand-gold transition-colors text-sm font-light;
 }
+
+/* Hide the bar by default (for desktop/tablet) */
+.mobile-actions-bar {
+    display: none;
+}
+
+/* Only show on screens smaller than 768px (Mobile) */
+@media (max-width: 767px) {
+    .mobile-actions-bar {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 65px;
+        background: white;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        z-index: 9999; /* Ensures it stays on top of all content */
+        padding: 10px;
+        gap: 10px;
+        box-sizing: border-box;
+    }
+
+    .action-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-weight: 600;
+        font-family: sans-serif;
+        border-radius: 8px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: transform 0.2s ease;
+    }
+
+    /* Primary Color (e.g., your brand color) */
+    .call-now {
+        background-color: #007bff; 
+        color: white;
+    }
+
+    /* Secondary Color (or a contrast color) */
+    .book-call {
+        background-color: #333;
+        color: white;
+    }
+
+    /* Small tap animation */
+    .action-btn:active {
+        transform: scale(0.95);
+    }
+}

@@ -100,22 +100,42 @@ const Investment: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070"); // Fallback
 
   // FETCH DATA FROM SUPABASE
   useEffect(() => {
-    const fetchProperties = async () => {
-      const { data } = await supabase
-        .from('properties')
-        .select('*')
-        .eq('category', 'Investment') 
-        .eq('is_hidden', false)
-        .order('created_at', { ascending: false });
+    const fetchPageData = async () => {
+      setLoading(true);
       
-      if (data) setProperties(data);
+      // Perform both fetches in parallel for better performance
+      const [propertiesRes, heroRes] = await Promise.all([
+        supabase
+          .from('properties')
+          .select('*')
+          .eq('category', 'Investment')
+          .eq('is_hidden', false)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('page_assets')
+          .select('hero_image_url')
+          .eq('page_name', 'investment')
+          .single()
+      ]);
+
+      // Handle Properties
+      if (propertiesRes.data) {
+        setProperties(propertiesRes.data);
+      }
+
+      // Handle Hero Image
+      if (heroRes.data?.hero_image_url) {
+        setHeroImage(heroRes.data.hero_image_url);
+      }
+
       setLoading(false);
     };
 
-    fetchProperties();
+    fetchPageData();
   }, []);
 
   // CAROUSEL LOGIC
@@ -154,9 +174,9 @@ const Investment: React.FC = () => {
         
         <motion.div {...sideFade('right')} className="flex-1 order-1 lg:order-2 aspect-[4/5] lg:aspect-square overflow-hidden shadow-2xl bg-stone-100">
           <img 
-            src="https://images.unsplash.com/photo-1444676632488-26a136c45b9b?q=80&w=2000&auto=format&fit=crop" 
+            src={heroImage} 
             className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" 
-            alt="Multi-family Architectural Detail" 
+            alt="Investment Hero" 
           />
         </motion.div>
       </section>

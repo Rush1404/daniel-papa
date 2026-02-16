@@ -53,6 +53,17 @@ const AdminPortal: React.FC = () => {
   const [blogImage, setBlogImage] = useState<File | null>(null);
   const [currentBlogImageUrl, setCurrentBlogImageUrl] = useState('');
 
+  // State for Hero Image Management
+  const [heroPage, setHeroPage] = useState('commercial');
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+
+  // --- TESTIMONIAL STATE ---
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [testName, setTestName] = useState('');
+  const [testText, setTestText] = useState('');
+  const [editingTestId, setEditingTestId] = useState<string | null>(null);
+
+
   // --- AUTH ---
   const handleAuth = (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,6 +142,30 @@ const AdminPortal: React.FC = () => {
 
       resetPropForm();
       fetchProperties();
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+
+  const handleHeroUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!heroFile) return;
+
+    try {
+      // 1. Upload to Supabase Storage
+      const publicUrl = await uploadImage(heroFile, 'hero-banners');
+
+      // 2. Upsert into page_assets (Insert if doesn't exist, Update if it does)
+      const { error } = await supabase
+        .from('page_assets')
+        .upsert({ 
+          page_name: heroPage, 
+          hero_image_url: publicUrl 
+        }, { onConflict: 'page_name' });
+
+      if (error) throw error;
+      alert(`${heroPage.toUpperCase()} hero image updated successfully.`);
+      setHeroFile(null);
     } catch (error: any) {
       alert(error.message);
     }
@@ -242,6 +277,37 @@ const AdminPortal: React.FC = () => {
     setCurrentBlogImageUrl('');
   };
 
+  // ==============================
+  //   TESTIMONIAL HANDLERS (Unchanged logic)
+  // ==============================
+
+  const fetchTestimonials = async () => {
+    const { data } = await supabase.from('testimonials').select('*').order('created_at', { ascending: false });
+    if (data) setTestimonials(data);
+  };
+
+  const handlePublishTestimonial = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const payload = { name: testName, text: testText };
+
+    if (editingTestId) {
+      await supabase.from('testimonials').update(payload).eq('id', editingTestId);
+      alert("Updated Successfully");
+    } else {
+      await supabase.from('testimonials').insert([payload]);
+      alert("Testimonial Added");
+    }
+    
+    setTestName(''); setTestText(''); setEditingTestId(null);
+    fetchTestimonials();
+  };
+
+  const handleDeleteTestimonial = async (id: string) => {
+    if(!window.confirm("Delete this testimonial?")) return;
+    await supabase.from('testimonials').delete().eq('id', id);
+    fetchTestimonials();
+  };
+
   // --- LOCK SCREEN ---
   if (!isAuthorized) {
     return (
@@ -255,6 +321,8 @@ const AdminPortal: React.FC = () => {
     );
   }
 
+
+
   return (
     <div className="min-h-screen bg-white pt-32 pb-20 px-6">
       <div className="max-w-6xl mx-auto">
@@ -267,6 +335,12 @@ const AdminPortal: React.FC = () => {
           <button onClick={() => setActiveTab('blogs')} className={`flex items-center gap-2 text-xs tracking-widest uppercase pb-2 transition-all ${activeTab === 'blogs' ? 'text-brand-maroon border-b-2 border-brand-maroon' : 'text-gray-400'}`}>
             <BookOpen size={16} /> Editorials
           </button>
+          <button 
+            onClick={() => { setActiveTab('testimonials' as any); fetchTestimonials(); }} 
+            className={`flex items-center gap-2 text-xs tracking-widest uppercase pb-2 transition-all ${activeTab as any === 'testimonials' ? 'text-brand-maroon border-b-2 border-brand-maroon' : 'text-gray-400'}`}
+          >
+            <Eye size={16} /> Testimonials
+          </button>
         </div>
 
         {/* =======================
@@ -274,34 +348,82 @@ const AdminPortal: React.FC = () => {
            ======================= */}
         {activeTab === 'properties' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            {/* LEFT: ADD/EDIT FORM */}
-            <div>
-              <div className="flex justify-between items-end mb-8">
-                <h3 className="text-brand-maroon text-2xl font-light uppercase">{editingPropId ? "Edit Listing" : "Add Listing"}</h3>
-                {editingPropId && <button onClick={resetPropForm} className="text-xs text-red-400 uppercase tracking-widest flex items-center gap-1"><X size={12}/> Cancel</button>}
+            {/* LEFT COLUMN: FORMS */}
+            <div className="space-y-16">
+              {/* SECTION A: ADD/EDIT LISTING */}
+              <div>
+                <div className="flex justify-between items-end mb-8">
+                  <h3 className="text-brand-maroon text-2xl font-light uppercase">{editingPropId ? "Edit Listing" : "Add Listing"}</h3>
+                  {editingPropId && <button onClick={resetPropForm} className="text-xs text-red-400 uppercase tracking-widest flex items-center gap-1"><X size={12}/> Cancel</button>}
+                </div>
+
+                <form onSubmit={handlePublishProperty} className="space-y-6">
+                  <select value={propCategory} onChange={(e) => setPropCategory(e.target.value)} className="w-full border-b border-stone-200 py-3 bg-transparent outline-none uppercase text-xs">
+                      <option value="Commercial">Commercial</option>
+                      <option value="Investment">Investment</option>
+                      <option value="Residential">Residential</option>
+                      <option value="Pre-Construction">Pre-Construction</option>
+                  </select>
+                  <input placeholder="Title" value={propTitle} onChange={e => setPropTitle(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
+                  <div className="flex gap-4">
+                      <input placeholder="Price" value={propPrice} onChange={e => setPropPrice(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
+                      <input placeholder="Details" value={propDetails} onChange={e => setPropDetails(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
+                  </div>
+                  <label className="cursor-pointer border border-dashed border-stone-300 p-8 flex flex-col items-center justify-center text-gray-400 hover:border-brand-gold transition-all">
+                    <Camera size={24} className="mb-2" />
+                    <span className="text-xs uppercase tracking-widest">{propImage ? propImage.name : (currentPropImageUrl ? "Keep Current Image" : "Upload Image")}</span>
+                    <input type="file" className="hidden" onChange={e => setPropImage(e.target.files ? e.target.files[0] : null)} />
+                  </label>
+                  <button className={`w-full py-4 text-white text-xs tracking-[0.3em] uppercase hover:bg-brand-gold transition-all ${editingPropId ? 'bg-blue-900' : 'bg-brand-maroon'}`}>
+                    {editingPropId ? "Update Listing" : "Publish Listing"}
+                  </button>
+                </form>
               </div>
 
-              <form onSubmit={handlePublishProperty} className="space-y-6">
-                <select value={propCategory} onChange={(e) => setPropCategory(e.target.value)} className="w-full border-b border-stone-200 py-3 bg-transparent outline-none uppercase text-xs">
-                    <option value="Commercial">Commercial</option>
-                    <option value="Investment">Investment</option>
-                    <option value="Residential">Residential</option>
-                    <option value="Pre-Construction">Pre-Construction</option>
-                </select>
-                <input placeholder="Title" value={propTitle} onChange={e => setPropTitle(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
-                <div className="flex gap-4">
-                    <input placeholder="Price" value={propPrice} onChange={e => setPropPrice(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
-                    <input placeholder="Details" value={propDetails} onChange={e => setPropDetails(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
+              {/* SECTION B: PAGE BRANDING (HERO IMAGES) */}
+              <div className="pt-12 border-t border-stone-100">
+                <div className="mb-8">
+                  <h3 className="text-brand-maroon text-xl font-light uppercase mb-2">Page Branding</h3>
+                  <p className="text-gray-400 text-[10px] tracking-widest uppercase">Update hero images for category pages</p>
                 </div>
-                <label className="cursor-pointer border border-dashed border-stone-300 p-8 flex flex-col items-center justify-center text-gray-400 hover:border-brand-gold transition-all">
-                  <Camera size={24} className="mb-2" />
-                  <span className="text-xs uppercase tracking-widest">{propImage ? propImage.name : (currentPropImageUrl ? "Keep Current Image" : "Upload Image")}</span>
-                  <input type="file" className="hidden" onChange={e => setPropImage(e.target.files ? e.target.files[0] : null)} />
-                </label>
-                <button className={`w-full py-4 text-white text-xs tracking-[0.3em] uppercase hover:bg-brand-gold transition-all ${editingPropId ? 'bg-blue-900' : 'bg-brand-maroon'}`}>
-                   {editingPropId ? "Update Listing" : "Publish Listing"}
-                </button>
-              </form>
+
+                <form onSubmit={handleHeroUpdate} className="space-y-6">
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <div className="flex-1">
+                      <label className="text-[9px] tracking-widest uppercase text-gray-400 mb-2 block">Select Page</label>
+                      <select 
+                        value={heroPage} 
+                        onChange={(e) => setHeroPage(e.target.value)}
+                        className="w-full border-b border-stone-200 py-2 outline-none uppercase text-xs bg-transparent"
+                      >
+                        <option value="commercial">Commercial</option>
+                        <option value="investment">Investment</option>
+                        <option value="residential">Residential</option>
+                        <option value="pre-construction">Pre-Construction</option>
+                      </select>
+                    </div>
+                    
+                    <div className="flex-1">
+                      <label className="text-[9px] tracking-widest uppercase text-gray-400 mb-2 block">Hero Photo</label>
+                      <label className="cursor-pointer border-b border-stone-200 py-2 flex justify-between items-center text-stone-400 hover:text-brand-gold transition-colors">
+                        <span className="text-[10px] uppercase truncate max-w-[150px]">
+                          {heroFile ? heroFile.name : "Choose New Photo"}
+                        </span>
+                        <Camera size={14} />
+                        <input type="file" className="hidden" onChange={(e) => setHeroFile(e.target.files ? e.target.files[0] : null)} />
+                      </label>
+                    </div>
+                  </div>
+
+                  <button 
+                    disabled={!heroFile}
+                    type="submit" 
+                    className="w-full py-3 border border-brand-gold text-brand-gold text-[10px] uppercase tracking-[0.3em] hover:bg-brand-gold hover:text-white transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-brand-gold"
+                  >
+                    Update Banner Image
+                  </button>
+                </form>
+              </div>
             </div>
 
             {/* RIGHT: PROPERTY LIST */}
@@ -310,7 +432,7 @@ const AdminPortal: React.FC = () => {
                 <h3 className="text-gray-400 text-xs tracking-widest uppercase">Inventory</h3>
                 <button onClick={fetchProperties}><RefreshCw size={14} className="text-gray-400 hover:text-brand-maroon"/></button>
               </div>
-
+              
               <div className="space-y-4">
                 {properties.map(p => (
                   <div key={p.id} className={`bg-white p-4 flex flex-col gap-3 shadow-sm border-l-4 ${p.is_hidden ? 'border-red-300 opacity-60' : 'border-brand-maroon'}`}>
@@ -402,8 +524,57 @@ const AdminPortal: React.FC = () => {
                 ))}
               </div>
             </div>
+            
           </div>
         )}
+
+        {/* =======================
+          TESTIMONIALS TAB 
+        ======================= */}
+      {(activeTab as any) === 'testimonials' && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div>
+            <h3 className="text-brand-maroon text-2xl font-light mb-8 uppercase">
+              {editingTestId ? "Edit Testimonial" : "Add Testimonial"}
+            </h3>
+            <form onSubmit={handlePublishTestimonial} className="space-y-6">
+              <input 
+                placeholder="Client Name" 
+                value={testName} onChange={e => setTestName(e.target.value)}
+                className="w-full border-b border-stone-200 py-3 outline-none" 
+                required 
+              />
+              <textarea 
+                placeholder="The client experience..." 
+                value={testText} onChange={e => setTestText(e.target.value)}
+                className="w-full border border-stone-200 p-4 h-[200px] outline-none text-sm leading-relaxed" 
+                required 
+              />
+              <button className="w-full py-4 bg-brand-maroon text-white text-xs tracking-[0.3em] uppercase hover:bg-brand-gold transition-all">
+                {editingTestId ? "Update Testimonial" : "Save Testimonial"}
+              </button>
+            </form>
+          </div>
+
+          <div className="bg-stone-50 p-8 h-[600px] overflow-y-auto">
+            <h3 className="text-gray-400 text-xs tracking-widest uppercase mb-6">Live Reviews</h3>
+            <div className="space-y-4">
+              {testimonials.map(t => (
+                <div key={t.id} className="bg-white p-6 shadow-sm border-l-4 border-brand-gold">
+                  <p className="text-xs text-gray-500 italic mb-4 line-clamp-3">"{t.text}"</p>
+                  <div className="flex justify-between items-center">
+                    <h4 className="text-brand-maroon text-[10px] font-bold uppercase">{t.name}</h4>
+                    <div className="flex gap-2">
+                      <button onClick={() => { setEditingTestId(t.id); setTestName(t.name); setTestText(t.text); }} className="text-gray-400 hover:text-blue-500"><Edit2 size={14}/></button>
+                      <button onClick={() => handleDeleteTestimonial(t.id)} className="text-gray-400 hover:text-red-500"><Trash2 size={14}/></button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       </div>
     </div>

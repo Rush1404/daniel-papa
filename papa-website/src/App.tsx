@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, Link } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import LandingPage from './pages/LandingPage'; // Move your current App content here
+import LandingPage from './pages/LandingPage';
 import MeetDaniel from './pages/MeetDaniel';
 import Residential from './pages/Ontario/Residential';
 import Mission from './pages/Mission';
@@ -13,15 +13,17 @@ import Commercial from './pages/Ontario/Commercial'
 import AdminPortal from './pages/AdminPortal';
 import BlogPost from './pages/BlogPost';
 import Insights from './pages/Insights';
-import { Instagram, Facebook, Linkedin} from 'lucide-react';
+// Added Phone and Calendar icons here
+import { Instagram, Facebook, Linkedin, Phone, Calendar } from 'lucide-react';
+import './index.css';
 
 const App: React.FC = () => {
   const { pathname } = useLocation();
 
-  // Scroll to top every time the URL changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-brand-gold selection:text-white overflow-x-hidden">
       <Navbar />
@@ -38,17 +40,35 @@ const App: React.FC = () => {
         <Route path="/yucatan" element={<Yucatan />} />
         <Route path="/internal-portal" element={<AdminPortal />} />
         <Route path="/insights" element={<Insights />} />
-        {/* DYNAMIC BLOG ROUTE */}
         <Route path="/journal/:slug" element={<BlogPost />} />
       </Routes>
 
-      
+      {/* --- MOBILE ACTION BUTTONS --- */}
+      {/* md:hidden ensures it only shows on mobile devices */}
+      <div className="md:hidden fixed bottom-0 left-0 w-full z-[9999] px-4 pb-6 pt-4 bg-white/80 backdrop-blur-md border-t border-gray-100 flex gap-3 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+        
+        {/* Call Now Button */}
+        <a 
+          href="tel:4169533540" 
+          className="flex-1 flex items-center justify-center gap-2 bg-black text-white py-4 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase transition-transform active:scale-95 shadow-lg"
+        >
+          <Phone size={14} className="text-brand-gold" />
+          Call Now
+        </a>
 
-      {/* Persistent Footer using Daniel's branding */}
+        {/* Book a Call Button */}
+        <Link 
+          to="/contact" 
+          className="flex-1 flex items-center justify-center gap-2 bg-brand-gold text-white py-4 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase transition-transform active:scale-95 shadow-lg"
+        >
+          <Calendar size={14} />
+          Book a Call
+        </Link>
+      </div>
+
       <footer className="bg-black py-24 px-6 lg:px-12 border-t border-white/5 text-white">
+        {/* ... (Existing footer code remains unchanged) ... */}
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-16">
-          
-          {/* LEFT SIDE: DANIEL PAPA & SOCIALS */}
           <div className="flex-1 space-y-8 text-left">
             <div>
               <h2 className="text-white text-2xl font-bold tracking-[0.3em] uppercase">
@@ -58,8 +78,6 @@ const App: React.FC = () => {
                 REALTOR
               </p>
             </div>
-
-            {/* Social Media Icons */}
             <div className="flex gap-6 text-white/40">
               <a href="#" className="hover:text-brand-gold transition-colors">
                 <Instagram size={20} />
@@ -71,8 +89,6 @@ const App: React.FC = () => {
                 <Linkedin size={20} />
               </a>
             </div>
-
-            {/* Direct Contact */}
             <div className="text-[10px] tracking-[0.2em] uppercase space-y-2 font-light text-white/60">
               <a href="tel:4169533540" className="block hover:text-brand-gold transition-colors">
                 M 416.953.3540
@@ -83,8 +99,6 @@ const App: React.FC = () => {
               <p className="pt-2">WWW.DANIELPAPA.COM</p>
             </div>
           </div>
-
-          {/* RIGHT SIDE: CENTURY 21 & BROKERAGE */}
           <div className="flex-1 md:text-right space-y-6">
             <div className="opacity-80">
               <h3 className="text-white font-bold tracking-[0.3em] text-xl uppercase">
@@ -94,22 +108,17 @@ const App: React.FC = () => {
                 Leading Edge Realty Inc.
               </p>
             </div>
-
             <div className="text-white/30 text-[9px] tracking-[0.25em] uppercase leading-loose font-light">
               <p className="mb-1">Brokerage</p>
               <p className="max-w-[250px] md:ml-auto">
                 18 Wynford Drive #214, <br/> Toronto, ON M3C 3S2
               </p>
             </div>
-            
-            {/* Small Legal/Disclaimer */}
             <p className="text-[8px] tracking-widest text-white/20 uppercase pt-8">
               Independently Owned and Operated.
             </p>
           </div>
         </div>
-
-        {/* BOTTOM BAR */}
         <div className="max-w-7xl mx-auto mt-4 pt-2 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[8px] tracking-[0.3em] text-white/20 uppercase">
           <p>© 2026 Daniel Papa Real Estate. All Rights Reserved.</p>
           <div className="flex gap-8">
