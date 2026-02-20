@@ -33,7 +33,7 @@ export default async function handler(req: Request): Promise<Response> {
     // 1. Fetch subscribers from Supabase
     const supabaseAdmin = createClient(
       process.env.VITE_SUPABASE_URL!,
-      process.env.VITE_SUPABASE_SERVICE_ROLE_KEY!
+      process.env.VITE_SUPABASE_ANON_ROLE_KEY!
     );
 
     const { data: subscribers, error: subError } = await supabaseAdmin
