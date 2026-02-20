@@ -52,7 +52,7 @@ export default async function handler(req: Request): Promise<Response> {
     // 2. First 2 sentences as preview
     const sentences = blogContent.replace(/\n+/g, ' ').match(/[^.!?]+[.!?]+/g) || [];
     const preview = sentences.slice(0, 2).join(' ').trim() || blogContent.slice(0, 200) + '...';
-    const siteUrl = process.env.SITE_URL || 'https://danielpaparealty.com';
+    const siteUrl = process.env.SITE_URL || 'https://rushsh.dev';
 
     // 3. Email HTML
     const emailHtml = `<!DOCTYPE html>
@@ -101,7 +101,7 @@ export default async function handler(req: Request): Promise<Response> {
       const batch = emails.slice(i, i + 50);
 
       const { data: _data, error } = await resend.emails.send({
-        from: 'Daniel Papa Real Estate <newsletter@danielpaparealty.com>',
+        from: 'Daniel Papa Real Estate <rushabh1404@gmail.com>',
         to: batch,
         subject: blogTitle,
         html: emailHtml,
