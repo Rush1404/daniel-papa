@@ -31,9 +31,10 @@ export default async function handler(req: Request): Promise<Response> {
     const { blogTitle, blogContent, blogImage, blogCategory, blogUrl } = await req.json();
 
     // 1. Fetch subscribers from Supabase
+    // IMPORTANT: Use non-VITE_ prefixed env vars set in Vercel dashboard
     const supabaseAdmin = createClient(
-      process.env.VITE_SUPABASE_URL!,
-      process.env.VITE_SUPABASE_ANON_ROLE_KEY!
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
     const { data: subscribers, error: subError } = await supabaseAdmin
@@ -51,7 +52,7 @@ export default async function handler(req: Request): Promise<Response> {
     // 2. First 2 sentences as preview
     const sentences = blogContent.replace(/\n+/g, ' ').match(/[^.!?]+[.!?]+/g) || [];
     const preview = sentences.slice(0, 2).join(' ').trim() || blogContent.slice(0, 200) + '...';
-    const siteUrl = process.env.VITE_SITE_URL || 'https://danielpaparealty.com';
+    const siteUrl = process.env.SITE_URL || 'https://danielpaparealty.com';
 
     // 3. Email HTML
     const emailHtml = `<!DOCTYPE html>
@@ -99,7 +100,7 @@ export default async function handler(req: Request): Promise<Response> {
     for (let i = 0; i < emails.length; i += 50) {
       const batch = emails.slice(i, i + 50);
 
-      const { data, error } = await resend.emails.send({
+      const { data: _data, error } = await resend.emails.send({
         from: 'Daniel Papa Real Estate <newsletter@danielpaparealty.com>',
         to: batch,
         subject: blogTitle,
