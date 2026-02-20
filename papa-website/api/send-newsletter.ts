@@ -8,22 +8,22 @@ export const config = {
   runtime: 'edge',
 };
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Content-Type': 'application/json',
+};
+
 export default async function handler(req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    });
+    return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
-      headers: { 'Content-Type': 'application/json' },
+      headers: corsHeaders,
     });
   }
 
@@ -32,8 +32,8 @@ export default async function handler(req: Request): Promise<Response> {
 
     // 1. Fetch subscribers from Supabase
     const supabaseAdmin = createClient(
-      import.meta.env.SUPABASE_URL!,
-      import.meta.env.SUPABASE_SERVICE_ROLE_KEY!
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
     const { data: subscribers, error: subError } = await supabaseAdmin
@@ -44,14 +44,14 @@ export default async function handler(req: Request): Promise<Response> {
     if (!subscribers || subscribers.length === 0) {
       return new Response(JSON.stringify({ emailsSent: 0 }), {
         status: 200,
-        headers: { 'Content-Type': 'application/json' },
+        headers: corsHeaders,
       });
     }
 
     // 2. First 2 sentences as preview
     const sentences = blogContent.replace(/\n+/g, ' ').match(/[^.!?]+[.!?]+/g) || [];
     const preview = sentences.slice(0, 2).join(' ').trim() || blogContent.slice(0, 200) + '...';
-    const siteUrl = import.meta.env.VITE_SITE_URL || 'https://danielpaparealty.com';
+    const siteUrl = process.env.VITE_SITE_URL || 'https://danielpaparealty.com';
 
     // 3. Email HTML
     const emailHtml = `<!DOCTYPE html>
@@ -91,8 +91,8 @@ export default async function handler(req: Request): Promise<Response> {
 </body>
 </html>`;
 
-    // 4. Send via Resend SDK (exactly as per Resend docs)
-    const resend = new Resend(import.meta.env.RESEND_API_KEY);
+    // 4. Send via Resend SDK
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const emails = subscribers.map((s: { email: string }) => s.email);
     let totalSent = 0;
 
@@ -112,14 +112,14 @@ export default async function handler(req: Request): Promise<Response> {
 
     return new Response(JSON.stringify({ emailsSent: totalSent }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: corsHeaders,
     });
 
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     return new Response(JSON.stringify({ error: message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: corsHeaders,
     });
   }
 }

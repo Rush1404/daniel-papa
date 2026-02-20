@@ -1,6 +1,5 @@
 // src/lib/sendNewsletter.ts
 // Calls the Vercel serverless function at /api/send-newsletter
-// which runs server-side — no CORS issues
 
 interface BlogPayload {
   blogTitle: string;
@@ -17,11 +16,20 @@ export async function sendBlogNewsletter(blog: BlogPayload): Promise<number> {
     body: JSON.stringify(blog),
   });
 
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || 'Failed to send newsletter');
+  // Safely read the body ONCE as text first
+  const text = await res.text();
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    // Response wasn't JSON (e.g. HTML 404 page) — give a useful error
+    throw new Error(`Server returned non-JSON response (status ${res.status})`);
   }
 
-  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || `Failed to send newsletter (status ${res.status})`);
+  }
+
   return data.emailsSent ?? 0;
 }
