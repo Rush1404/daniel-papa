@@ -1,30 +1,38 @@
 // api/send-newsletter.ts
-// Vercel serverless function — lives at /api/send-newsletter
-// Vercel runs this server-side, so no CORS issues with Resend.
-//
-// Add to your Vercel dashboard (or .env for local dev):
-//   RESEND_API_KEY=re_xxxxxxxxxx
-//   SUPABASE_URL=https://xxxx.supabase.co
-//   SUPABASE_SERVICE_ROLE_KEY=eyJ...   ← NOT the anon key, the service role key
-//   VITE_SITE_URL=https://danielpaparealty.com
-//
-// The service role key is in Supabase Dashboard → Project Settings → API → service_role
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from '@supabase/supabase-js';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+export const config = {
+  runtime: 'edge',
+};
+
+export default async function handler(req: Request): Promise<Response> {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    });
   }
 
-  const { blogTitle, blogContent, blogImage, blogCategory, blogUrl } = req.body;
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
   try {
-    // 1. Fetch subscribers using service role key (bypasses RLS)
+    const { blogTitle, blogContent, blogImage, blogCategory, blogUrl } = await req.json();
+
+    // 1. Fetch subscribers
     const supabaseAdmin = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      import.meta.env.SUPABASE_URL!,
+      import.meta.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
     const { data: subscribers, error: subError } = await supabaseAdmin
@@ -33,14 +41,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (subError) throw new Error(subError.message);
     if (!subscribers || subscribers.length === 0) {
-      return res.status(200).json({ emailsSent: 0 });
+      return new Response(JSON.stringify({ emailsSent: 0 }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // 2. Build preview from first 2 sentences
     const sentences = blogContent.replace(/\n+/g, ' ').match(/[^.!?]+[.!?]+/g) || [];
     const preview = sentences.slice(0, 2).join(' ').trim() || blogContent.slice(0, 200) + '...';
-
-    const siteUrl = process.env.VITE_SITE_URL || 'https://danielpaparealty.com';
+    const siteUrl = import.meta.env.VITE_SITE_URL || 'https://danielpaparealty.com';
 
     // 3. Build email HTML
     const emailHtml = `<!DOCTYPE html>
@@ -80,8 +90,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 </body>
 </html>`;
 
-    // 4. Send via Resend in batches of 50
-    const resendApiKey = process.env.RESEND_API_KEY;
+    // 4. Send via Resend
+    const resendApiKey = import.meta.env.RESEND_API_KEY;
     if (!resendApiKey) throw new Error('RESEND_API_KEY not set');
 
     const emails = subscribers.map((s: { email: string }) => s.email);
@@ -107,9 +117,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       totalSent += batch.length;
     }
 
-    return res.status(200).json({ emailsSent: totalSent });
+    return new Response(JSON.stringify({ emailsSent: totalSent }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return new Response(JSON.stringify({ error: message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
