@@ -101,7 +101,7 @@ export default async function handler(req: Request): Promise<Response> {
       const batch = emails.slice(i, i + 50);
 
       const { data: _data, error } = await resend.emails.send({
-        from: 'Daniel Papa Real Estate <rushabh1404@gmail.com>',
+        from: 'Daniel Papa Real Estate <newsletter@rushsh.dev>',
         to: batch,
         subject: blogTitle,
         html: emailHtml,
