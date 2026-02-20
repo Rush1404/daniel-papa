@@ -74,6 +74,8 @@ const App: React.FC = () => {
   const [testimonials, setTestimonials] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [startIndex, setStartIndex] = useState(0);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'duplicate' | 'error'>('idle');
 
   useEffect(() => {
     const fetchLandingData = async () => {
@@ -130,6 +132,74 @@ const App: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const handleNewsletterSignup = async () => {
+    const email = newsletterEmail.trim().toLowerCase();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+
+    setNewsletterStatus('loading');
+
+    const { error } = await supabase
+      .from('marketing_subscribers')
+      .insert([{ email }]);
+
+    if (!error) {
+      setNewsletterStatus('success');
+      setNewsletterEmail('');
+    } else if (error.code === '23505') {
+      // Postgres unique constraint violation — email already in list
+      setNewsletterStatus('duplicate');
+    } else {
+      setNewsletterStatus('error');
+    }
+  };
+
+
+// ── CHANGE 3 ─────────────────────────────────────────────────
+// In the CTA section, FIND the existing static <motion.div> block
+// that contains the email input + Sign Up button, and REPLACE it
+// with this:
+
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.2 }}
+  className="flex flex-col items-center gap-4"
+>
+  {newsletterStatus === 'success' ? (
+    <p className="text-brand-gold text-xs tracking-[0.3em] uppercase py-4">
+      ✓ You're on the list. Welcome.
+    </p>
+  ) : (
+    <div className="flex flex-col md:flex-row max-w-md w-full mx-auto gap-4">
+      <input
+        type="email"
+        placeholder="Email Address"
+        value={newsletterEmail}
+        onChange={e => { setNewsletterEmail(e.target.value); setNewsletterStatus('idle'); }}
+        onKeyDown={e => e.key === 'Enter' && handleNewsletterSignup()}
+        className="flex-1 bg-white/5 border border-white/20 px-6 py-4 text-xs tracking-widest focus:outline-none focus:border-brand-gold text-white"
+      />
+      <button
+        onClick={handleNewsletterSignup}
+        disabled={newsletterStatus === 'loading'}
+        className="bg-white text-black px-10 py-4 text-[10px] tracking-widest uppercase hover:bg-brand-gold hover:text-white transition-all duration-500 disabled:opacity-50"
+      >
+        {newsletterStatus === 'loading' ? '...' : 'Sign Up'}
+      </button>
+    </div>
+  )}
+
+  {newsletterStatus === 'duplicate' && (
+    <p className="text-white/40 text-[10px] tracking-[0.3em] uppercase">
+      Already subscribed.
+    </p>
+  )}
+  {newsletterStatus === 'error' && (
+    <p className="text-red-400 text-[10px] tracking-[0.3em] uppercase">
+      Something went wrong. Try again.
+    </p>
+  )}
+</motion.div>
   
 
   const webImage = "https://images.unsplash.com/photo-1546614409-810f10108b74?q=80&w=2066&auto=format&fit=crop";
@@ -430,20 +500,46 @@ const App: React.FC = () => {
               Sign up for the latest market reports & industry updates.
             </motion.p>
             
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex flex-col md:flex-row max-w-md mx-auto gap-4"
+              className="flex flex-col items-center gap-4"
             >
-              <input 
-                type="email" 
-                placeholder="Email Address" 
-                className="flex-1 bg-white/5 border border-white/20 px-6 py-4 text-xs tracking-widest focus:outline-none focus:border-brand-gold text-white" 
-              />
-              <button className="bg-white text-black px-10 py-4 text-[10px] tracking-widest uppercase hover:bg-brand-gold hover:text-white transition-all duration-500">
-                Sign Up
-              </button>
+              {newsletterStatus === 'success' ? (
+                <p className="text-brand-gold text-xs tracking-[0.3em] uppercase py-4">
+                  ✓ You're on the list. Welcome.
+                </p>
+              ) : (
+                <div className="flex flex-col md:flex-row max-w-md w-full mx-auto gap-4">
+                  <input
+                    type="email"
+                    placeholder="Email Address"
+                    value={newsletterEmail}
+                    onChange={e => { setNewsletterEmail(e.target.value); setNewsletterStatus('idle'); }}
+                    onKeyDown={e => e.key === 'Enter' && handleNewsletterSignup()}
+                    className="flex-1 bg-white/5 border border-white/20 px-6 py-4 text-xs tracking-widest focus:outline-none focus:border-brand-gold text-white"
+                  />
+                  <button
+                    onClick={handleNewsletterSignup}
+                    disabled={newsletterStatus === 'loading'}
+                    className="bg-white text-black px-10 py-4 text-[10px] tracking-widest uppercase hover:bg-brand-gold hover:text-white transition-all duration-500 disabled:opacity-50"
+                  >
+                    {newsletterStatus === 'loading' ? '...' : 'Sign Up'}
+                  </button>
+                </div>
+              )}
+
+              {newsletterStatus === 'duplicate' && (
+                <p className="text-white/40 text-[10px] tracking-[0.3em] uppercase">
+                  Already subscribed.
+                </p>
+              )}
+              {newsletterStatus === 'error' && (
+                <p className="text-red-400 text-[10px] tracking-[0.3em] uppercase">
+                  Something went wrong. Try again.
+                </p>
+              )}
             </motion.div>
           </div>
         </section>

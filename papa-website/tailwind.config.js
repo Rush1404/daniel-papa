@@ -2,7 +2,8 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}", // This line must cover your .tsx files!
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "src/types/**/*" // This line must cover your .tsx files!
   ],
   theme: {
     extend: {
