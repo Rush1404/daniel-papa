@@ -1,5 +1,7 @@
 // api/send-newsletter.ts
+// Run: npm install resend
 
+import { Resend } from 'resend';
 import { createClient } from '@supabase/supabase-js';
 
 export const config = {
@@ -7,7 +9,6 @@ export const config = {
 };
 
 export default async function handler(req: Request): Promise<Response> {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       status: 200,
@@ -29,7 +30,7 @@ export default async function handler(req: Request): Promise<Response> {
   try {
     const { blogTitle, blogContent, blogImage, blogCategory, blogUrl } = await req.json();
 
-    // 1. Fetch subscribers
+    // 1. Fetch subscribers from Supabase
     const supabaseAdmin = createClient(
       import.meta.env.SUPABASE_URL!,
       import.meta.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -47,12 +48,12 @@ export default async function handler(req: Request): Promise<Response> {
       });
     }
 
-    // 2. Build preview from first 2 sentences
+    // 2. First 2 sentences as preview
     const sentences = blogContent.replace(/\n+/g, ' ').match(/[^.!?]+[.!?]+/g) || [];
     const preview = sentences.slice(0, 2).join(' ').trim() || blogContent.slice(0, 200) + '...';
     const siteUrl = import.meta.env.VITE_SITE_URL || 'https://danielpaparealty.com';
 
-    // 3. Build email HTML
+    // 3. Email HTML
     const emailHtml = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/></head>
@@ -90,30 +91,22 @@ export default async function handler(req: Request): Promise<Response> {
 </body>
 </html>`;
 
-    // 4. Send via Resend
-    const resendApiKey = import.meta.env.RESEND_API_KEY;
-    if (!resendApiKey) throw new Error('RESEND_API_KEY not set');
-
+    // 4. Send via Resend SDK (exactly as per Resend docs)
+    const resend = new Resend(import.meta.env.RESEND_API_KEY);
     const emails = subscribers.map((s: { email: string }) => s.email);
     let totalSent = 0;
 
     for (let i = 0; i < emails.length; i += 50) {
       const batch = emails.slice(i, i + 50);
-      const response = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${resendApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: 'Daniel Papa Real Estate <newsletter@danielpaparealty.com>',
-          to: batch,
-          subject: blogTitle,
-          html: emailHtml,
-        }),
+
+      const { data, error } = await resend.emails.send({
+        from: 'Daniel Papa Real Estate <newsletter@danielpaparealty.com>',
+        to: batch,
+        subject: blogTitle,
+        html: emailHtml,
       });
 
-      if (!response.ok) throw new Error(`Resend error: ${await response.text()}`);
+      if (error) throw new Error(error.message);
       totalSent += batch.length;
     }
 
