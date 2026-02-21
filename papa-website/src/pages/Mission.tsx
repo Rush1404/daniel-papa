@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import LogoKey from '../assets/clear_logo.png';
+import { supabase } from '../components/supabaseClient';
 
 const Mission: React.FC = () => {
+  const [visionImage, setVisionImage] = useState("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1000");
+
+  useEffect(() => {
+    const fetchVisionImage = async () => {
+      const { data } = await supabase
+        .from('page_assets')
+        .select('hero_image_url')
+        .eq('page_name', 'mission_vision')
+        .single();
+      if (data?.hero_image_url) {
+        setVisionImage(data.hero_image_url);
+      }
+    };
+    fetchVisionImage();
+  }, []);
+
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
     whileInView: { opacity: 1, y: 0 },
@@ -46,7 +63,7 @@ const Mission: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-20">
           <motion.div {...sideFade('left')} className="flex-1 aspect-video lg:aspect-[4/5] overflow-hidden shadow-2xl">
             <img 
-              src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1000" 
+              src={visionImage} 
               className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" 
               alt="Modern Toronto Architecture" 
             />

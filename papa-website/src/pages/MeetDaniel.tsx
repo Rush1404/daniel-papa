@@ -1,6 +1,7 @@
-import React from 'react';
-import { motion} from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
+import { supabase } from '../components/supabaseClient';
 
 const sideFade = (direction: 'left' | 'right') => ({
   initial: { opacity: 0, x: direction === 'left' ? -100 : 100 },
@@ -9,10 +10,23 @@ const sideFade = (direction: 'left' | 'right') => ({
   viewport: { once: false, amount: 0.2 }
 });
 
-
-
-// --- Main App Component ---
 const MeetDaniel: React.FC = () => {
+  const [portraitImage, setPortraitImage] = useState("https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1000");
+
+  useEffect(() => {
+    const fetchPortrait = async () => {
+      const { data } = await supabase
+        .from('page_assets')
+        .select('hero_image_url')
+        .eq('page_name', 'meet_daniel_portrait')
+        .single();
+      if (data?.hero_image_url) {
+        setPortraitImage(data.hero_image_url);
+      }
+    };
+    fetchPortrait();
+  }, []);
+
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-brand-gold selection:text-white overflow-x-hidden">
       <Navbar />
@@ -25,7 +39,7 @@ const MeetDaniel: React.FC = () => {
             <motion.div {...sideFade('left')} className="flex-1 sticky top-40">
               <div className="aspect-[2/4] overflow-hidden shadow-2xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1000" 
+                  src={portraitImage} 
                   className="w-full h-full object-cover" 
                   alt="Daniel Papa Portrait" 
                 />

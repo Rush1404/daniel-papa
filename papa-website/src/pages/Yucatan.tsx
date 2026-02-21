@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, LazyMotion, domMax, type HTMLMotionProps } from 'framer-motion';
+import { supabase } from '../components/supabaseClient';
 
-// Asset Imports
-import YucatanHero from '../assets/yucatan_imgs/yucatan_hero.webp';
-import YucatanExterior from '../assets/yucatan_imgs/yucatan_exterior.webp';
-import FrontExterior from '../assets/yucatan_imgs/front_exterior_view.webp';
-import LivingRoomKitchen from '../assets/yucatan_imgs/living_room_+_kitchen.webp';
-import MasterBath from '../assets/yucatan_imgs/master_bathroom.webp';
-import GuestBed1 from '../assets/yucatan_imgs/guest_bedroom_1.webp';
+// Static Asset Imports (used as fallback defaults)
+import YucatanHeroDefault from '../assets/yucatan_imgs/yucatan_hero.webp';
+import YucatanExteriorDefault from '../assets/yucatan_imgs/yucatan_exterior.webp';
+import FrontExteriorDefault from '../assets/yucatan_imgs/front_exterior_view.webp';
+import LivingRoomKitchenDefault from '../assets/yucatan_imgs/living_room_+_kitchen.webp';
+import MasterBathDefault from '../assets/yucatan_imgs/master_bathroom.webp';
+import GuestBed1Default from '../assets/yucatan_imgs/guest_bedroom_1.webp';
 
 // 1. Fixed TypeScript Animation Object
-// Using HTMLMotionProps<"div"> ensures compatibility with motion.div, motion.h1, etc.
 const fadeInUpProps: HTMLMotionProps<"div"> = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
@@ -40,6 +40,48 @@ const pillars = [
 ];
 
 const Yucatan: React.FC = () => {
+  // Dynamic images with static fallbacks
+  const [yucatanHero, setYucatanHero] = useState(YucatanHeroDefault);
+  const [yucatanExterior, setYucatanExterior] = useState(YucatanExteriorDefault);
+  const [livingRoomKitchen, setLivingRoomKitchen] = useState(LivingRoomKitchenDefault);
+  const [masterBath, setMasterBath] = useState(MasterBathDefault);
+  const [guestBed1, setGuestBed1] = useState(GuestBed1Default);
+  const [frontExterior, setFrontExterior] = useState(FrontExteriorDefault);
+
+  useEffect(() => {
+    const fetchYucatanImages = async () => {
+      const keys = [
+        'yucatan_hero',
+        'yucatan_exterior',
+        'yucatan_living_room',
+        'yucatan_master_bath',
+        'yucatan_guest_bedroom',
+        'yucatan_front_exterior'
+      ];
+
+      const { data } = await supabase
+        .from('page_assets')
+        .select('page_name, hero_image_url')
+        .in('page_name', keys);
+
+      if (data) {
+        data.forEach((row: any) => {
+          if (!row.hero_image_url) return; // Skip null — keep default
+          switch (row.page_name) {
+            case 'yucatan_hero': setYucatanHero(row.hero_image_url); break;
+            case 'yucatan_exterior': setYucatanExterior(row.hero_image_url); break;
+            case 'yucatan_living_room': setLivingRoomKitchen(row.hero_image_url); break;
+            case 'yucatan_master_bath': setMasterBath(row.hero_image_url); break;
+            case 'yucatan_guest_bedroom': setGuestBed1(row.hero_image_url); break;
+            case 'yucatan_front_exterior': setFrontExterior(row.hero_image_url); break;
+          }
+        });
+      }
+    };
+
+    fetchYucatanImages();
+  }, []);
+
   return (
     <LazyMotion features={domMax}>
       <div className="bg-white min-h-screen pt-20 selection:bg-brand-gold/30">
@@ -53,8 +95,7 @@ const Yucatan: React.FC = () => {
             className="absolute inset-0"
           >
             <img 
-              src={YucatanHero} 
-              // fetchPriority and eager loading makes the hero show up first
+              src={yucatanHero} 
               fetchPriority="high"
               loading="eager"
               className="w-full h-full object-cover opacity-70" 
@@ -110,7 +151,7 @@ const Yucatan: React.FC = () => {
 
             <motion.div {...fadeInUpProps} transition={{ delay: 0.2 }} className="aspect-[4/3] overflow-hidden shadow-2xl bg-stone-100">
               <img 
-                src={YucatanExterior} 
+                src={yucatanExterior} 
                 loading="lazy"
                 decoding="async"
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" 
@@ -131,7 +172,7 @@ const Yucatan: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[1200px]">
               <motion.div {...fadeInUpProps} className="md:col-span-8 relative overflow-hidden group shadow-lg bg-stone-100">
                 <img 
-                  src={LivingRoomKitchen} 
+                  src={livingRoomKitchen} 
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -141,7 +182,7 @@ const Yucatan: React.FC = () => {
 
               <motion.div {...fadeInUpProps} className="md:col-span-4 relative overflow-hidden group shadow-lg bg-stone-100">
                 <img 
-                  src={MasterBath} 
+                  src={masterBath} 
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -151,7 +192,7 @@ const Yucatan: React.FC = () => {
 
               <motion.div {...fadeInUpProps} className="md:col-span-4 relative overflow-hidden group shadow-lg bg-stone-100">
                 <img 
-                  src={GuestBed1} 
+                  src={guestBed1} 
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -161,7 +202,7 @@ const Yucatan: React.FC = () => {
 
               <motion.div {...fadeInUpProps} className="md:col-span-8 relative overflow-hidden group shadow-lg bg-stone-100">
                 <img 
-                  src={FrontExterior} 
+                  src={frontExterior} 
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -198,7 +239,6 @@ const Yucatan: React.FC = () => {
               <h2 className="text-brand-maroon text-xs tracking-[0.5em] uppercase mb-20 font-bold">Why Daniel?</h2>
             </div>
             
-
             {/* 3 Pillars Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3">
               {pillars.map((pillar, index) => (
