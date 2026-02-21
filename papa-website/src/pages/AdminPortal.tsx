@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../components/supabaseClient'; 
+import { sendBlogNewsletter } from '../components/sendNewsletter';
 import { motion } from 'framer-motion';
 import { 
   Camera, Send, Lock, Trash2, Home, BookOpen, 
-  Eye, EyeOff, Edit2, RefreshCw, X, Image, Check, Loader2, Star
+  Eye, EyeOff, Edit2, RefreshCw, X, Image, Check, Loader2, Star,
+  Mail, ToggleLeft, ToggleRight
 } from 'lucide-react';
 
 // --- INTERFACES ---
@@ -26,6 +28,7 @@ interface Blog {
   featured_image: string;
   is_hidden: boolean;
   created_at: string;
+  slug: string;
 }
 
 // Website Image Slot Definition
@@ -62,7 +65,8 @@ const AdminPortal: React.FC = () => {
   const [blogContent, setBlogContent] = useState('');
   const [blogImage, setBlogImage] = useState<File | null>(null);
   const [currentBlogImageUrl, setCurrentBlogImageUrl] = useState('');
-
+  const [notifySubscribers, setNotifySubscribers] = useState(false);
+  const [sendingEmails, setSendingEmails] = useState(false);
   // State for Hero Image Management
   const [heroPage, setHeroPage] = useState('commercial');
   const [heroFile, setHeroFile] = useState<File | null>(null);
@@ -211,15 +215,11 @@ const AdminPortal: React.FC = () => {
     try {
       const publicUrl = await uploadImage(heroFile, 'hero-banners');
 
-      const { error } = await supabase
-        .from('page_assets')
-        .upsert({ 
-          page_name: heroPage, 
-          hero_image_url: publicUrl 
-        }, { onConflict: 'page_name' });
+      await supabase
+        .from('site_settings')
+        .upsert({ key: `hero_${heroPage}`, value: publicUrl }, { onConflict: 'key' });
 
-      if (error) throw error;
-      alert(`${heroPage.toUpperCase()} hero image updated successfully.`);
+      alert(`Hero image for ${heroPage} updated!`);
       setHeroFile(null);
     } catch (error: any) {
       alert(error.message);
@@ -294,6 +294,27 @@ const AdminPortal: React.FC = () => {
   // ==============================
   //    BLOG HANDLERS
   // ==============================
+
+  // 🔔 Send newsletter emails via sendBlogNewsletter
+  const sendNewsletterEmails = async (blog: { title: string; slug: string; content: string; featured_image: string; category: string }) => {
+    try {
+      setSendingEmails(true);
+      const count = await sendBlogNewsletter({
+        blogTitle: blog.title,
+        blogContent: blog.content,
+        blogImage: blog.featured_image,
+        blogCategory: blog.category,
+        blogUrl: `${window.location.origin}/journal/${blog.slug}`,
+      });
+      alert(`✅ Blog published! Newsletter sent to ${count} subscriber(s).`);
+    } catch (err: any) {
+      console.error('Newsletter error:', err);
+      alert(`Blog published, but newsletter failed to send: ${err.message}`);
+    } finally {
+      setSendingEmails(false);
+    }
+  };
+
   const handlePublishBlog = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!blogImage && !currentBlogImageUrl) return alert("Image required");
@@ -318,7 +339,13 @@ const AdminPortal: React.FC = () => {
         alert("Updated Successfully");
       } else {
         await supabase.from('blogs').insert([{ ...payload, created_at: new Date().toISOString() }]);
-        alert("Published Successfully");
+        
+        // 🔔 Send newsletter if toggle is on (only for NEW blogs, not edits)
+        if (notifySubscribers) {
+          await sendNewsletterEmails({ ...payload });
+        } else {
+          alert("Published Successfully");
+        }
       }
       
       resetBlogForm();
@@ -334,6 +361,7 @@ const AdminPortal: React.FC = () => {
     setBlogCategory(blog.category);
     setBlogContent(blog.content);
     setCurrentBlogImageUrl(blog.featured_image);
+    setNotifySubscribers(false); // Reset toggle when editing
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -355,6 +383,7 @@ const AdminPortal: React.FC = () => {
     setBlogContent('');
     setBlogImage(null);
     setCurrentBlogImageUrl('');
+    setNotifySubscribers(false);
   };
 
   // ==============================
@@ -646,32 +675,65 @@ const AdminPortal: React.FC = () => {
 
                 <textarea placeholder="Write content here..." value={blogContent} onChange={e => setBlogContent(e.target.value)} className="w-full border border-stone-200 p-4 h-[300px] outline-none" required />
 
-                <button className={`w-full py-4 text-white text-xs tracking-[0.3em] uppercase hover:bg-brand-gold transition-all ${editingBlogId ? 'bg-blue-900' : 'bg-brand-maroon'}`}>
-                   {editingBlogId ? "Update Editorial" : "Publish Editorial"}
+                {/* 🔔 NOTIFY SUBSCRIBERS TOGGLE — only shown for new blogs, not edits */}
+                {!editingBlogId && (
+                  <div 
+                    className={`flex items-center justify-between p-4 rounded border cursor-pointer transition-all ${notifySubscribers ? 'border-brand-maroon bg-brand-maroon/5' : 'border-stone-200 bg-stone-50'}`}
+                    onClick={() => setNotifySubscribers(!notifySubscribers)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Mail size={16} className={notifySubscribers ? 'text-brand-maroon' : 'text-gray-400'} />
+                      <div>
+                        <p className={`text-xs font-semibold uppercase tracking-widest ${notifySubscribers ? 'text-brand-maroon' : 'text-gray-500'}`}>
+                          Notify Subscribers
+                        </p>
+                        <p className="text-[10px] text-gray-400 mt-0.5">
+                          {notifySubscribers ? 'Email will send when published' : 'Marketing list will not be notified'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className={`transition-colors ${notifySubscribers ? 'text-brand-maroon' : 'text-gray-300'}`}>
+                      {notifySubscribers ? <ToggleRight size={28} /> : <ToggleLeft size={28} />}
+                    </div>
+                  </div>
+                )}
+
+                <button 
+                  disabled={sendingEmails}
+                  className={`w-full py-4 text-white text-xs tracking-[0.3em] uppercase hover:bg-brand-gold transition-all disabled:opacity-60 disabled:cursor-not-allowed ${editingBlogId ? 'bg-blue-900' : 'bg-brand-maroon'}`}
+                >
+                  {sendingEmails 
+                    ? '⏳ Sending Emails...' 
+                    : editingBlogId 
+                      ? "Update Editorial" 
+                      : notifySubscribers 
+                        ? "Publish & Notify Subscribers" 
+                        : "Publish Editorial"
+                  }
                 </button>
               </form>
             </div>
 
             <div className="bg-stone-50 p-8 h-[600px] overflow-y-auto">
               <div className="flex justify-between mb-6">
-                <h3 className="text-gray-400 text-xs tracking-widest uppercase">Published</h3>
+                <h3 className="text-gray-400 text-xs tracking-widest uppercase">Archive</h3>
                 <button onClick={fetchBlogs}><RefreshCw size={14} className="text-gray-400 hover:text-brand-maroon" /></button>
               </div>
               <div className="space-y-4">
                 {blogs.map(blog => (
                   <div key={blog.id} className={`bg-white p-4 flex flex-col gap-3 shadow-sm border-l-4 ${blog.is_hidden ? 'border-red-300 opacity-60' : 'border-brand-maroon'}`}>
                     <div className="flex gap-4 items-center">
-                      <div className="w-16 h-12 bg-stone-200 overflow-hidden shrink-0">
+                      <div className="w-12 h-12 bg-stone-200 overflow-hidden shrink-0">
                         <img src={blog.featured_image} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[9px] text-brand-gold uppercase tracking-widest font-bold">{blog.category}</p>
-                        <h4 className="text-brand-maroon text-sm font-medium">{blog.title}</h4>
+                        <h4 className="text-brand-maroon text-sm font-medium uppercase line-clamp-1">{blog.title}</h4>
+                        <p className="text-[10px] text-gray-400 tracking-widest">{new Date(blog.created_at).toLocaleDateString()}</p>
                       </div>
                     </div>
                     <div className="flex gap-2 justify-end pt-2 border-t border-stone-50">
                         <button onClick={() => handleToggleHideBlog(blog)} className="p-2 text-gray-400 hover:text-brand-maroon" title={blog.is_hidden ? "Unhide" : "Hide"}>
-                            {blog.is_hidden ? <EyeOff size={16} /> : <Eye size={16} />}
+                            {blog.is_hidden ? <Eye size={16} /> : <EyeOff size={16} />}
                         </button>
                         <button onClick={() => handleEditBlog(blog)} className="p-2 text-gray-400 hover:text-blue-600"><Edit2 size={16} /></button>
                         <button onClick={() => handleDeleteBlog(blog.id)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
@@ -707,21 +769,23 @@ const AdminPortal: React.FC = () => {
                 required 
               />
               <button className="w-full py-4 bg-brand-maroon text-white text-xs tracking-[0.3em] uppercase hover:bg-brand-gold transition-all">
-                {editingTestId ? "Update Testimonial" : "Add Testimonial"}
+                {editingTestId ? "Update Testimonial" : "Save Testimonial"}
               </button>
             </form>
           </div>
 
           <div className="bg-stone-50 p-8 h-[600px] overflow-y-auto">
-            <h3 className="text-gray-400 text-xs tracking-widest uppercase mb-6">Published Testimonials</h3>
+            <h3 className="text-gray-400 text-xs tracking-widest uppercase mb-6">Live Reviews</h3>
             <div className="space-y-4">
               {testimonials.map(t => (
-                <div key={t.id} className="bg-white p-4 shadow-sm border-l-4 border-brand-maroon">
-                  <h4 className="text-brand-maroon font-medium text-sm uppercase mb-2">{t.name}</h4>
-                  <p className="text-gray-500 text-xs leading-relaxed line-clamp-3">{t.text}</p>
-                  <div className="flex gap-2 justify-end mt-3 pt-2 border-t border-stone-50">
-                    <button onClick={() => { setEditingTestId(t.id); setTestName(t.name); setTestText(t.text); }} className="p-2 text-gray-400 hover:text-blue-600"><Edit2 size={16} /></button>
-                    <button onClick={() => handleDeleteTestimonial(t.id)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
+                <div key={t.id} className="bg-white p-6 shadow-sm border-l-4 border-brand-gold">
+                  <p className="text-xs text-gray-500 italic mb-4 line-clamp-3">"{t.text}"</p>
+                  <div className="flex justify-between items-center">
+                    <h4 className="text-brand-maroon text-[10px] font-bold uppercase">{t.name}</h4>
+                    <div className="flex gap-2">
+                      <button onClick={() => { setEditingTestId(t.id); setTestName(t.name); setTestText(t.text); }} className="text-gray-400 hover:text-blue-500"><Edit2 size={14}/></button>
+                      <button onClick={() => handleDeleteTestimonial(t.id)} className="text-gray-400 hover:text-red-500"><Trash2 size={14}/></button>
+                    </div>
                   </div>
                 </div>
               ))}
