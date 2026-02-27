@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import LogoKey from '../assets/clear_logo.png';
 import { supabase } from '../components/supabaseClient';
@@ -73,7 +74,8 @@ const Mission: React.FC = () => {
             <h2 className="text-brand-gold text-xs tracking-[0.5em] uppercase mb-6 font-bold">The Vision</h2>
             <h3 className="text-brand-maroon text-4xl md:text-5xl font-light tracking-tight mb-8 uppercase">Built on 15 years of Experience, Not Promises.</h3>
             <p className="text-gray-600 leading-loose mb-8">
-             Fifteen years of proven results. One seamless experience. I don't just close transactions; I help build your future. 
+             Fifteen years of disciplined execution.<br></br>
+             One seamless experience built on clarity and structure. 
             </p>
           </motion.div>
         </div>
@@ -100,7 +102,7 @@ const Mission: React.FC = () => {
             <motion.div {...fadeInUp} transition={{ delay: 0.6 }} className="text-center group">
               <div className="text-brand-gold text-4xl font-extralight mb-6">03</div>
               <h4 className="text-brand-maroon tracking-[0.2em] font-medium mb-4">COMMUNITY</h4>
-              <p className="text-gray-500 text-sm leading-relaxed"> Built on relationships, not transactions.</p>
+              <p className="text-gray-500 text-sm leading-relaxed"> Built on trust, strengthened over time.</p>
             </motion.div>
           </div>
         </div>
@@ -110,9 +112,12 @@ const Mission: React.FC = () => {
       <section className="py-32 bg-brand-maroon text-center text-white">
         <motion.div {...fadeInUp}>
           <h2 className="text-3xl font-light tracking-[0.3em] uppercase mb-8">Ready to Start Your Journey?</h2>
-          <button className="px-12 py-4 bg-white text-brand-maroon text-[10px] tracking-[0.4em] uppercase font-bold hover:bg-brand-gold hover:text-white transition-all duration-500 shadow-xl">
+          <Link 
+                to="/contact" 
+                className="px-12 py-4 bg-white text-brand-maroon text-[10px] tracking-[0.4em] uppercase font-bold hover:bg-brand-gold hover:text-white transition-all duration-500 shadow-xl"
+          >
             Book a Call with Daniel
-          </button>
+          </Link>
         </motion.div>
       </section>
     </div>

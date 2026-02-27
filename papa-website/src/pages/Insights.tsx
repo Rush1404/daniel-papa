@@ -78,7 +78,7 @@ const Insights: React.FC = () => {
           transition={{ delay: 0.1 }}
           className="text-5xl md:text-7xl font-light text-brand-maroon uppercase tracking-tight mb-12"
         >
-          Insights & <br/> <span className="italic">Strategic Living</span>
+          Market Insights
         </motion.h1>
       </section>
 

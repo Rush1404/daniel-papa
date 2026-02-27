@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import MeetDaniel from './pages/MeetDaniel';
 import Residential from './pages/Ontario/Residential';
-import Mission from './pages/Mission';
+import Mission from './pages/Approach';
 import Contact from './pages/Contact';
 import Yucatan from './pages/Yucatan';
 import PreConstruction from './pages/Ontario/PreConstruction';
@@ -78,7 +78,7 @@ const App: React.FC = () => {
                 REALTOR
               </p>
             </div>
-            <div className="flex gap-6 text-white/40">
+            <div className="flex gap-6 text-white">
               <a href="#" className="hover:text-brand-gold transition-colors">
                 <Instagram size={20} />
               </a>
@@ -89,7 +89,7 @@ const App: React.FC = () => {
                 <Linkedin size={20} />
               </a>
             </div>
-            <div className="text-[10px] tracking-[0.2em] uppercase space-y-2 font-light text-white/60">
+            <div className="text-[10px] tracking-[0.2em] uppercase space-y-2 font-light text-white">
               <a href="tel:4169533540" className="block hover:text-brand-gold transition-colors">
                 M 416.953.3540
               </a>
@@ -108,18 +108,18 @@ const App: React.FC = () => {
                 Leading Edge Realty Inc.
               </p>
             </div>
-            <div className="text-white/30 text-[9px] tracking-[0.25em] uppercase leading-loose font-light">
+            <div className="text-white text-[9px] tracking-[0.25em] uppercase leading-loose font-light">
               <p className="mb-1">Brokerage</p>
               <p className="max-w-[250px] md:ml-auto">
                 18 Wynford Drive #214, <br/> Toronto, ON M3C 3S2
               </p>
             </div>
-            <p className="text-[8px] tracking-widest text-white/20 uppercase pt-8">
+            <p className="text-[8px] tracking-widest text-white uppercase pt-8">
               Independently Owned and Operated.
             </p>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-4 pt-2 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[8px] tracking-[0.3em] text-white/20 uppercase">
+        <div className="max-w-7xl mx-auto mt-4 pt-2 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[8px] tracking-[0.3em] text-white uppercase">
           <p>© 2026 Daniel Papa Real Estate. All Rights Reserved.</p>
           <div className="flex gap-8">
             <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>

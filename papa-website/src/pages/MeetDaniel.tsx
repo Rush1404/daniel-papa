@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import { supabase } from '../components/supabaseClient';
+
 
 const sideFade = (direction: 'left' | 'right') => ({
   initial: { opacity: 0, x: direction === 'left' ? -100 : 100 },
@@ -94,9 +96,14 @@ const MeetDaniel: React.FC = () => {
                 </p>
               </div>
 
-              <button className="mt-16 btn-maroon w-full md:w-auto">
-                Book a Call with Daniel
-              </button>
+              <section className="pt-12">
+                  <Link 
+                        to="/contact" 
+                        className="inline-block px-12 py-4 bg-brand-maroon text-white text-[10px] tracking-[0.4em] uppercase hover:bg-brand-gold transition-all duration-500"
+                  >
+                    Book a Call with Daniel
+                  </Link>
+              </section>
             </motion.div>
           </div>
         </section>

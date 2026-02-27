@@ -165,7 +165,7 @@ const App: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 1 }}
-              className="text-brand-maroon text-4xl md:text-8xl font-light tracking-tighter mb-6 leading-[1.05]"
+              className="text-brand-maroon text-6xl md:text-8xl font-light tracking-tighter mb-6 leading-[1.05]"
             >
               BUILDING YOUR <br /> <span className="italic text-brand-gold">FUTURE.</span>
             </motion.h1>
@@ -196,7 +196,7 @@ const App: React.FC = () => {
         {/* CATEGORY GRID (BLOG SECTION) */}
         <section className="py-24 px-6 lg:px-12 bg-white">
           <div className="text-center mb-16">
-             <p className="text-xs tracking-[0.4em] uppercase text-gray-400 mb-4">Our Expertise</p>
+             <p className="text-xl tracking-[0.4em] uppercase text-dark-400 mb-4">Our Expertise</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {categories.map((cat, i) => (
