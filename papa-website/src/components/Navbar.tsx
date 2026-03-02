@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, ChevronRight, Phone } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import LogoKey from '../assets/clear_logo.png';
 
@@ -10,6 +10,9 @@ const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isMobileAccordionOpen, setIsMobileAccordionOpen] = useState<boolean>(false);
+  
+  // Reference for the close timer "Grace Period"
+  const timeoutRef = useRef<number | null>(null);
 
   const isDarkNavPage = ['/', '/residential', '/mission', '/opportunities', '/contact', '/yucatan'].includes(location.pathname);
 
@@ -21,10 +24,21 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Sync scroll lock when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
   }, [isMobileMenuOpen]);
+
+  // Dropdown Handlers
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = window.setTimeout(() => {
+      setIsDropdownOpen(false);
+    }, 250); // Increased to 250ms for a more forgiving user experience
+  };
 
   const navLinks = [
     { name: 'Meet Daniel', path: '/meet-daniel' },
@@ -67,23 +81,39 @@ const Navbar: React.FC = () => {
             <div 
               key={link.name} 
               className="relative group py-2"
-              onMouseEnter={() => link.dropdown && setIsDropdownOpen(true)}
-              onMouseLeave={() => link.dropdown && setIsDropdownOpen(false)}
+              onMouseEnter={() => link.dropdown && handleMouseEnter()}
+              onMouseLeave={() => link.dropdown && handleMouseLeave()}
             >
               <button className="flex items-center gap-1 hover:text-brand-gold transition-colors uppercase">
                 {link.dropdown ? <>{link.name} <ChevronDown size={12} /></> : <Link to={link.path}>{link.name}</Link>}
               </button>
 
-              {link.dropdown && isDropdownOpen && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute top-full left-0 bg-white shadow-2xl py-6 px-8 min-w-[240px] flex flex-col gap-4 text-brand-maroon border-t-2 border-brand-gold mt-2"
-                >
-                  {link.subLinks?.map(sub => (
-                    <Link key={sub.path} to={sub.path} className="hover:text-brand-gold transition-colors">{sub.name}</Link>
-                  ))}
-                </motion.div>
+              {link.dropdown && (
+                <AnimatePresence>
+                  {isDropdownOpen && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="absolute top-full left-0 bg-white shadow-2xl py-6 px-8 min-w-[260px] flex flex-col gap-4 text-brand-maroon border-t-2 border-brand-gold mt-2"
+                    >
+                      {/* INVISIBLE BRIDGE: Fills the air gap between the nav and the dropdown box */}
+                      <div className="absolute -top-6 left-0 w-full h-6 bg-transparent" />
+                      
+                      {link.subLinks?.map(sub => (
+                        <Link 
+                          key={sub.path} 
+                          to={sub.path} 
+                          className="hover:text-brand-gold transition-colors py-1"
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               )}
             </div>
           ))}
@@ -111,7 +141,6 @@ const Navbar: React.FC = () => {
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed inset-0 bg-white z-[120] flex flex-col p-6"
           >
-            {/* Mobile Menu Header */}
             <div className="flex justify-between items-center mb-16">
               <span className="text-xs tracking-[0.5em] text-brand-gold uppercase font-bold">Navigation</span>
               <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-brand-maroon">
@@ -119,7 +148,6 @@ const Navbar: React.FC = () => {
               </button>
             </div>
 
-            {/* Mobile Links Stack */}
             <div className="flex flex-col gap-8 flex-1 overflow-y-auto">
               {navLinks.map((link) => (
                 <div key={link.name} className="flex flex-col">
@@ -146,7 +174,7 @@ const Navbar: React.FC = () => {
                               <Link 
                                 key={sub.path} 
                                 to={sub.path} 
-                                className="text-sm tracking-[0.2em] uppercase text-gray-500"
+                                className="text-sm tracking-[0.2em] uppercase text-gray-700"
                                 onClick={() => setIsMobileMenuOpen(false)}
                               >
                                 {sub.name}
@@ -169,7 +197,6 @@ const Navbar: React.FC = () => {
               ))}
             </div>
 
-            {/* Mobile Menu Footer */}
             <div className="mt-auto pt-8 border-t border-gray-100 flex flex-col gap-6">
                <Link 
                 to="/contact" 

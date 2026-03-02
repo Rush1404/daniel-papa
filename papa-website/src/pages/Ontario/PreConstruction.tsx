@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../../components/supabaseClient';
@@ -67,7 +68,7 @@ interface Property {
 //         <h4 className="text-[11px] tracking-widest text-brand-maroon font-medium uppercase">
 //           {property.address}
 //         </h4>
-//         <p className="text-[10px] tracking-widest text-gray-400 font-light italic">
+//         <p className="text-[10px] tracking-widest text-gray-700 font-light italic">
 //           {property.specs}
 //         </p>
 //         <div className="pt-2">
@@ -165,12 +166,15 @@ const PreConstruction: React.FC = () => {
           <h1 className="text-5xl md:text-5xl font-light tracking-widest text-brand-maroon mb-8 uppercase leading-tight">
             PRE-CONSTRUCTION <br/> OPPORTUNITIES
           </h1>
-          <p className="text-gray-600 text-lg leading-relaxed mb-10 max-w-lg">
+          <p className="text-gray-700 text-lg leading-relaxed mb-10 max-w-lg">
             Secure your future with exclusive platinum access to the most anticipated developments. Investing in pre-construction allows you to leverage market growth and customize your luxury living space from the ground up.
           </p>
-          <button className="px-10 py-4 bg-brand-maroon text-white text-[10px] tracking-[0.3em] uppercase font-bold hover:bg-brand-gold transition-all duration-500 shadow-xl">
-            Register for Platinum Access
-          </button>
+          <Link 
+            to="/contact" 
+            className="inline-block px-12 py-4 bg-brand-maroon text-white text-[10px] tracking-[0.4em] uppercase hover:bg-brand-gold transition-all duration-500"
+          >
+            Book a Call with Daniel
+          </Link>
         </motion.div>
         
         <motion.div 
@@ -194,9 +198,9 @@ const PreConstruction: React.FC = () => {
           </div>
 
           {loading ? (
-             <div className="text-center text-gray-400 py-20">Loading Exclusive Listings...</div>
+             <div className="text-center text-gray-700 py-20">Loading Exclusive Listings...</div>
           ) : properties.length === 0 ? (
-             <div className="text-center text-gray-400 py-20">No Current Commercial Listings Available.</div>
+             <div className="text-center text-gray-700 py-20">No Current Commercial Listings Available.</div>
           ) : (
             <div className="relative min-h-[600px] w-full group">
                 <AnimatePresence mode="wait">
@@ -224,7 +228,7 @@ const PreConstruction: React.FC = () => {
                         <h3 className="text-2xl md:text-3xl font-light tracking-widest text-brand-maroon mb-4 uppercase leading-tight">
                             {prop.title}
                         </h3>
-                        <p className="text-xl font-light text-gray-400 mb-6 tracking-widest">
+                        <p className="text-xl font-light text-gray-700 mb-6 tracking-widest">
                             {prop.price}
                         </p>
                         <button className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all">

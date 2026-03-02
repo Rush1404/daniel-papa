@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../../components/supabaseClient';
 
 // Define Interface
@@ -67,7 +68,7 @@ interface Property {
 //         <h4 className="text-[11px] tracking-widest text-brand-maroon font-medium uppercase">
 //           {property.address}
 //         </h4>
-//         <p className="text-[10px] tracking-widest text-gray-400 font-light italic">
+//         <p className="text-[10px] tracking-widest text-gray-700 font-light italic">
 //           {property.specs}
 //         </p>
 //         <div className="pt-2">
@@ -164,12 +165,15 @@ const Investment: React.FC = () => {
           <h1 className="text-5xl md:text-7xl font-light tracking-widest text-brand-maroon mb-8 uppercase leading-tight">
             INVESTMENT & <br/> MULTI-FAMILY
           </h1>
-          <p className="text-gray-600 text-lg leading-relaxed mb-10 max-w-lg">
+          <p className="text-gray-700 text-lg leading-relaxed mb-10 max-w-lg">
             Strategic wealth preservation through institutional-grade assets. We specialize in identifying high-yield multi-family opportunities and turnkey portfolios for the discerning investor.
           </p>
-          <button className="px-10 py-4 bg-brand-maroon text-white text-[10px] tracking-[0.3em] uppercase font-bold hover:bg-brand-gold transition-all duration-500 shadow-xl">
-            View Portfolio Analysis
-          </button>
+          <Link 
+            to="/contact" 
+            className="inline-block px-12 py-4 bg-brand-maroon text-white text-[10px] tracking-[0.4em] uppercase hover:bg-brand-gold transition-all duration-500"
+          >
+            Book a Call with Daniel
+          </Link>
         </motion.div>
         
         <motion.div {...sideFade('right')} className="flex-1 order-1 lg:order-2 aspect-[4/5] lg:aspect-square overflow-hidden shadow-2xl bg-stone-100">
@@ -190,9 +194,9 @@ const Investment: React.FC = () => {
           </div>
 
           {loading ? (
-             <div className="text-center text-gray-400 py-20">Loading Exclusive Listings...</div>
+             <div className="text-center text-gray-700 py-20">Loading Exclusive Listings...</div>
           ) : properties.length === 0 ? (
-             <div className="text-center text-gray-400 py-20">No Current Commercial Listings Available.</div>
+             <div className="text-center text-gray-700 py-20">No Current Commercial Listings Available.</div>
           ) : (
             <div className="relative min-h-[600px] w-full group">
                 <AnimatePresence mode="wait">
@@ -220,7 +224,7 @@ const Investment: React.FC = () => {
                         <h3 className="text-2xl md:text-3xl font-light tracking-widest text-brand-maroon mb-4 uppercase leading-tight">
                             {prop.title}
                         </h3>
-                        <p className="text-xl font-light text-gray-400 mb-6 tracking-widest">
+                        <p className="text-xl font-light text-gray-700 mb-6 tracking-widest">
                             {prop.price}
                         </p>
                         <button className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all">

@@ -502,21 +502,21 @@ const AdminPortal: React.FC = () => {
         
         {/* TAB SWITCHER */}
         <div className="flex gap-8 mb-16 border-b border-stone-100 pb-4 overflow-x-auto">
-          <button onClick={() => setActiveTab('properties')} className={`flex items-center gap-2 text-xs tracking-widest uppercase pb-2 transition-all whitespace-nowrap ${activeTab === 'properties' ? 'text-brand-maroon border-b-2 border-brand-maroon' : 'text-gray-400'}`}>
+          <button onClick={() => setActiveTab('properties')} className={`flex items-center gap-2 text-xs tracking-widest uppercase pb-2 transition-all whitespace-nowrap ${activeTab === 'properties' ? 'text-brand-maroon border-b-2 border-brand-maroon' : 'text-gray-700'}`}>
             <Home size={16} /> Listings
           </button>
-          <button onClick={() => setActiveTab('blogs')} className={`flex items-center gap-2 text-xs tracking-widest uppercase pb-2 transition-all whitespace-nowrap ${activeTab === 'blogs' ? 'text-brand-maroon border-b-2 border-brand-maroon' : 'text-gray-400'}`}>
+          <button onClick={() => setActiveTab('blogs')} className={`flex items-center gap-2 text-xs tracking-widest uppercase pb-2 transition-all whitespace-nowrap ${activeTab === 'blogs' ? 'text-brand-maroon border-b-2 border-brand-maroon' : 'text-gray-700'}`}>
             <BookOpen size={16} /> Editorials
           </button>
           <button 
             onClick={() => { setActiveTab('testimonials'); fetchTestimonials(); }} 
-            className={`flex items-center gap-2 text-xs tracking-widest uppercase pb-2 transition-all whitespace-nowrap ${activeTab === 'testimonials' ? 'text-brand-maroon border-b-2 border-brand-maroon' : 'text-gray-400'}`}
+            className={`flex items-center gap-2 text-xs tracking-widest uppercase pb-2 transition-all whitespace-nowrap ${activeTab === 'testimonials' ? 'text-brand-maroon border-b-2 border-brand-maroon' : 'text-gray-700'}`}
           >
             <Eye size={16} /> Testimonials
           </button>
           <button 
             onClick={() => { setActiveTab('website-images'); fetchWebsiteImages(); }} 
-            className={`flex items-center gap-2 text-xs tracking-widest uppercase pb-2 transition-all whitespace-nowrap ${activeTab === 'website-images' ? 'text-brand-maroon border-b-2 border-brand-maroon' : 'text-gray-400'}`}
+            className={`flex items-center gap-2 text-xs tracking-widest uppercase pb-2 transition-all whitespace-nowrap ${activeTab === 'website-images' ? 'text-brand-maroon border-b-2 border-brand-maroon' : 'text-gray-700'}`}
           >
             <Image size={16} /> Website Images
           </button>
@@ -548,7 +548,7 @@ const AdminPortal: React.FC = () => {
                       <input placeholder="Price" value={propPrice} onChange={e => setPropPrice(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
                       <input placeholder="Details" value={propDetails} onChange={e => setPropDetails(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
                   </div>
-                  <label className="cursor-pointer border border-dashed border-stone-300 p-8 flex flex-col items-center justify-center text-gray-400 hover:border-brand-gold transition-all">
+                  <label className="cursor-pointer border border-dashed border-stone-300 p-8 flex flex-col items-center justify-center text-gray-700 hover:border-brand-gold transition-all">
                     <Camera size={24} className="mb-2" />
                     <span className="text-xs uppercase tracking-widest">{propImage ? propImage.name : (currentPropImageUrl ? "Keep Current Image" : "Upload Image")}</span>
                     <input type="file" className="hidden" onChange={e => setPropImage(e.target.files ? e.target.files[0] : null)} />
@@ -563,13 +563,13 @@ const AdminPortal: React.FC = () => {
               <div className="pt-12 border-t border-stone-100">
                 <div className="mb-8">
                   <h3 className="text-brand-maroon text-xl font-light uppercase mb-2">Page Branding</h3>
-                  <p className="text-gray-400 text-[10px] tracking-widest uppercase">Update hero images for category pages</p>
+                  <p className="text-gray-700 text-[10px] tracking-widest uppercase">Update hero images for category pages</p>
                 </div>
 
                 <form onSubmit={handleHeroUpdate} className="space-y-6">
                   <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-1">
-                      <label className="text-[9px] tracking-widest uppercase text-gray-400 mb-2 block">Select Page</label>
+                      <label className="text-[9px] tracking-widest uppercase text-gray-700 mb-2 block">Select Page</label>
                       <select 
                         value={heroPage} 
                         onChange={(e) => setHeroPage(e.target.value)}
@@ -583,7 +583,7 @@ const AdminPortal: React.FC = () => {
                     </div>
                     
                     <div className="flex-1">
-                      <label className="text-[9px] tracking-widest uppercase text-gray-400 mb-2 block">Hero Photo</label>
+                      <label className="text-[9px] tracking-widest uppercase text-gray-700 mb-2 block">Hero Photo</label>
                       <label className="cursor-pointer border-b border-stone-200 py-2 flex justify-between items-center text-stone-400 hover:text-brand-gold transition-colors">
                         <span className="text-[10px] uppercase truncate max-w-[150px]">
                           {heroFile ? heroFile.name : "Choose New Photo"}
@@ -608,13 +608,13 @@ const AdminPortal: React.FC = () => {
             {/* RIGHT: PROPERTY LIST */}
             <div className="bg-stone-50 p-8 h-[600px] overflow-y-auto">
               <div className="flex justify-between mb-6">
-                <h3 className="text-gray-400 text-xs tracking-widest uppercase">Inventory</h3>
-                <button onClick={fetchProperties}><RefreshCw size={14} className="text-gray-400 hover:text-brand-maroon"/></button>
+                <h3 className="text-gray-700 text-xs tracking-widest uppercase">Inventory</h3>
+                <button onClick={fetchProperties}><RefreshCw size={14} className="text-gray-700 hover:text-brand-maroon"/></button>
               </div>
               
               <div className="space-y-4">
                 {/* Featured count indicator */}
-                <div className="text-[9px] tracking-widest uppercase text-gray-400 mb-2">
+                <div className="text-[9px] tracking-widest uppercase text-gray-700 mb-2">
                   <span className="text-brand-gold font-bold">{properties.filter(p => p.is_featured).length}/3</span> Featured on Homepage
                 </div>
                 {properties.map(p => (
@@ -634,16 +634,16 @@ const AdminPortal: React.FC = () => {
                     <div className="flex gap-2 justify-end pt-2 border-t border-stone-50">
                         <button 
                           onClick={() => handleToggleFeatured(p)} 
-                          className={`p-2 transition-all ${p.is_featured ? 'text-brand-gold' : 'text-gray-300 hover:text-brand-gold'}`} 
+                          className={`p-2 transition-all ${p.is_featured ? 'text-brand-gold' : 'text-gray-700 hover:text-brand-gold'}`} 
                           title={p.is_featured ? "Remove from homepage" : "Feature on homepage"}
                         >
                             <Star size={16} fill={p.is_featured ? 'currentColor' : 'none'} />
                         </button>
-                        <button onClick={() => handleToggleHideProperty(p)} className="p-2 text-gray-400 hover:text-brand-maroon" title={p.is_hidden ? "Unhide" : "Hide"}>
+                        <button onClick={() => handleToggleHideProperty(p)} className="p-2 text-gray-700 hover:text-brand-maroon" title={p.is_hidden ? "Unhide" : "Hide"}>
                             {p.is_hidden ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
-                        <button onClick={() => handleEditProperty(p)} className="p-2 text-gray-400 hover:text-blue-600"><Edit2 size={16} /></button>
-                        <button onClick={() => handleDeleteProperty(p.id)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
+                        <button onClick={() => handleEditProperty(p)} className="p-2 text-gray-700 hover:text-blue-600"><Edit2 size={16} /></button>
+                        <button onClick={() => handleDeleteProperty(p.id)} className="p-2 text-gray-700 hover:text-red-500"><Trash2 size={16} /></button>
                     </div>
                   </div>
                 ))}
@@ -667,7 +667,7 @@ const AdminPortal: React.FC = () => {
                 <input placeholder="Article Title" value={blogTitle} onChange={e => setBlogTitle(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none text-lg" required />
                 <input placeholder="Category" value={blogCategory} onChange={e => setBlogCategory(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
                 
-                <label className="cursor-pointer border-b border-stone-200 py-3 flex justify-between items-center text-gray-400 hover:text-brand-gold">
+                <label className="cursor-pointer border-b border-stone-200 py-3 flex justify-between items-center text-gray-700 hover:text-brand-gold">
                   <span className="text-sm">{blogImage ? blogImage.name : (currentBlogImageUrl ? "Keep Current Image" : "Upload Cover")}</span>
                   <Camera size={18} />
                   <input type="file" className="hidden" onChange={e => setBlogImage(e.target.files ? e.target.files[0] : null)} />
@@ -682,17 +682,17 @@ const AdminPortal: React.FC = () => {
                     onClick={() => setNotifySubscribers(!notifySubscribers)}
                   >
                     <div className="flex items-center gap-3">
-                      <Mail size={16} className={notifySubscribers ? 'text-brand-maroon' : 'text-gray-400'} />
+                      <Mail size={16} className={notifySubscribers ? 'text-brand-maroon' : 'text-gray-700'} />
                       <div>
-                        <p className={`text-xs font-semibold uppercase tracking-widest ${notifySubscribers ? 'text-brand-maroon' : 'text-gray-500'}`}>
+                        <p className={`text-xs font-semibold uppercase tracking-widest ${notifySubscribers ? 'text-brand-maroon' : 'text-gray-700'}`}>
                           Notify Subscribers
                         </p>
-                        <p className="text-[10px] text-gray-400 mt-0.5">
+                        <p className="text-[10px] text-gray-700 mt-0.5">
                           {notifySubscribers ? 'Email will send when published' : 'Marketing list will not be notified'}
                         </p>
                       </div>
                     </div>
-                    <div className={`transition-colors ${notifySubscribers ? 'text-brand-maroon' : 'text-gray-300'}`}>
+                    <div className={`transition-colors ${notifySubscribers ? 'text-brand-maroon' : 'text-gray-700'}`}>
                       {notifySubscribers ? <ToggleRight size={28} /> : <ToggleLeft size={28} />}
                     </div>
                   </div>
@@ -716,8 +716,8 @@ const AdminPortal: React.FC = () => {
 
             <div className="bg-stone-50 p-8 h-[600px] overflow-y-auto">
               <div className="flex justify-between mb-6">
-                <h3 className="text-gray-400 text-xs tracking-widest uppercase">Archive</h3>
-                <button onClick={fetchBlogs}><RefreshCw size={14} className="text-gray-400 hover:text-brand-maroon" /></button>
+                <h3 className="text-gray-700 text-xs tracking-widest uppercase">Archive</h3>
+                <button onClick={fetchBlogs}><RefreshCw size={14} className="text-gray-700 hover:text-brand-maroon" /></button>
               </div>
               <div className="space-y-4">
                 {blogs.map(blog => (
@@ -728,15 +728,15 @@ const AdminPortal: React.FC = () => {
                       </div>
                       <div className="flex-1">
                         <h4 className="text-brand-maroon text-sm font-medium uppercase line-clamp-1">{blog.title}</h4>
-                        <p className="text-[10px] text-gray-400 tracking-widest">{new Date(blog.created_at).toLocaleDateString()}</p>
+                        <p className="text-[10px] text-gray-700 tracking-widest">{new Date(blog.created_at).toLocaleDateString()}</p>
                       </div>
                     </div>
                     <div className="flex gap-2 justify-end pt-2 border-t border-stone-50">
-                        <button onClick={() => handleToggleHideBlog(blog)} className="p-2 text-gray-400 hover:text-brand-maroon" title={blog.is_hidden ? "Unhide" : "Hide"}>
+                        <button onClick={() => handleToggleHideBlog(blog)} className="p-2 text-gray-700 hover:text-brand-maroon" title={blog.is_hidden ? "Unhide" : "Hide"}>
                             {blog.is_hidden ? <Eye size={16} /> : <EyeOff size={16} />}
                         </button>
-                        <button onClick={() => handleEditBlog(blog)} className="p-2 text-gray-400 hover:text-blue-600"><Edit2 size={16} /></button>
-                        <button onClick={() => handleDeleteBlog(blog.id)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
+                        <button onClick={() => handleEditBlog(blog)} className="p-2 text-gray-700 hover:text-blue-600"><Edit2 size={16} /></button>
+                        <button onClick={() => handleDeleteBlog(blog.id)} className="p-2 text-gray-700 hover:text-red-500"><Trash2 size={16} /></button>
                     </div>
                   </div>
                 ))}
@@ -775,16 +775,16 @@ const AdminPortal: React.FC = () => {
           </div>
 
           <div className="bg-stone-50 p-8 h-[600px] overflow-y-auto">
-            <h3 className="text-gray-400 text-xs tracking-widest uppercase mb-6">Live Reviews</h3>
+            <h3 className="text-gray-700 text-xs tracking-widest uppercase mb-6">Live Reviews</h3>
             <div className="space-y-4">
               {testimonials.map(t => (
                 <div key={t.id} className="bg-white p-6 shadow-sm border-l-4 border-brand-gold">
-                  <p className="text-xs text-gray-500 italic mb-4 line-clamp-3">"{t.text}"</p>
+                  <p className="text-xs text-gray-700 italic mb-4 line-clamp-3">"{t.text}"</p>
                   <div className="flex justify-between items-center">
                     <h4 className="text-brand-maroon text-[10px] font-bold uppercase">{t.name}</h4>
                     <div className="flex gap-2">
-                      <button onClick={() => { setEditingTestId(t.id); setTestName(t.name); setTestText(t.text); }} className="text-gray-400 hover:text-blue-500"><Edit2 size={14}/></button>
-                      <button onClick={() => handleDeleteTestimonial(t.id)} className="text-gray-400 hover:text-red-500"><Trash2 size={14}/></button>
+                      <button onClick={() => { setEditingTestId(t.id); setTestName(t.name); setTestText(t.text); }} className="text-gray-700 hover:text-blue-500"><Edit2 size={14}/></button>
+                      <button onClick={() => handleDeleteTestimonial(t.id)} className="text-gray-700 hover:text-red-500"><Trash2 size={14}/></button>
                     </div>
                   </div>
                 </div>
@@ -801,7 +801,7 @@ const AdminPortal: React.FC = () => {
           <div>
             <div className="mb-12">
               <h3 className="text-brand-maroon text-2xl font-light uppercase mb-2">Website Images</h3>
-              <p className="text-gray-400 text-[10px] tracking-widest uppercase">Upload custom images for each section of the site. Changes go live immediately.</p>
+              <p className="text-gray-700 text-[10px] tracking-widest uppercase">Upload custom images for each section of the site. Changes go live immediately.</p>
             </div>
 
             <div className="space-y-16">
@@ -846,7 +846,7 @@ const AdminPortal: React.FC = () => {
                           {/* Label & Description */}
                           <div>
                             <h5 className="text-brand-maroon text-sm font-medium uppercase tracking-wide">{slot.label}</h5>
-                            <p className="text-gray-400 text-[10px] tracking-wide">{slot.description}</p>
+                            <p className="text-gray-700 text-[10px] tracking-wide">{slot.description}</p>
                           </div>
 
                           {/* Upload Input */}

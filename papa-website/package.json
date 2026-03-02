@@ -11,8 +11,11 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.94.0",
     "@types/react-router-dom": "^5.3.3",
+    "@vercel/build-utils": "^13.6.1",
+    "ajv": "^8.18.0",
     "framer-motion": "^12.27.5",
     "lucide-react": "^0.562.0",
+    "nodejs": "^0.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-email": "^5.2.8",
@@ -25,7 +28,7 @@
     "@types/node": "^24.10.13",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
-    "@vercel/node": "^5.6.6",
+    "@vercel/node": "^5.6.9",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.23",
     "eslint": "^9.39.1",
@@ -39,6 +42,10 @@
     "vite": "npm:rolldown-vite@7.2.5"
   },
   "overrides": {
-    "vite": "npm:rolldown-vite@7.2.5"
+    "vite": "npm:rolldown-vite@7.2.5",
+    "ajv": "^8.12.0",
+    "minimatch": "^9.0.0",
+    "path-to-regexp": "^6.3.0",
+    "undici": "^6.22.1"
   }
 }

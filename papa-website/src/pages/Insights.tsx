@@ -142,7 +142,7 @@ const Insights: React.FC = () => {
                         {post.title}
                       </h2>
                       
-                      <p className="text-gray-500 text-sm font-light line-clamp-2 leading-relaxed">
+                      <p className="text-gray-700 text-sm font-light line-clamp-2 leading-relaxed">
                         {post.content}
                       </p>
 

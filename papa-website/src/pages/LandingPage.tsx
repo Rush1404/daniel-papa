@@ -60,6 +60,8 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [startIndex, setStartIndex] = useState(0);
   const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600");
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'duplicate' | 'error'>('idle');
 
   useEffect(() => {
     const fetchLandingData = async () => {
@@ -119,6 +121,23 @@ const App: React.FC = () => {
       setStartIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
     }
   };
+
+  const handleNewsletterSignup = async () => {
+    const email = newsletterEmail.trim().toLowerCase();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+    setNewsletterStatus('loading');
+    const { error } = await supabase
+      .from('marketing_subscribers')
+      .insert([{ email }]);
+    if (!error) {
+      setNewsletterStatus('success');
+      setNewsletterEmail('');
+    } else if (error.code === '23505') {
+      setNewsletterStatus('duplicate');
+    } else {
+      setNewsletterStatus('error');
+    }
+  };
   const [isMobile, setIsMobile] = useState(false);
 
   // Check screen size on mount and resize
@@ -174,7 +193,7 @@ const App: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.8 }}
-              className="text-gray-600 text-sm md:text-lg font-light max-w-xl mb-12 leading-relaxed"
+              className="text-gray-700 text-sm md:text-lg font-light max-w-xl mb-12 leading-relaxed"
             >
               By combining your vision with my 15 years of proven strategic real estate market expertise,
               your next move will be as rewarding as it is seamless. 
@@ -209,7 +228,7 @@ const App: React.FC = () => {
                   />
                 </Link>
                 <a className="text-brand-maroon tracking-[0.3em] font-medium mb-5 text-sm border-brand-gold hover:text-brand-gold" href={cat.path}>{cat.title}</a>
-                <p className="text-gray-500 text-xs leading-relaxed mt-3 mb-6 px-4">{cat.desc}</p>
+                <p className="text-gray-700 text-xs leading-relaxed mt-3 mb-6 px-4">{cat.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -257,13 +276,13 @@ const App: React.FC = () => {
                       <h4 className="text-brand-maroon text-sm md:text-base tracking-[0.2em] uppercase font-medium leading-snug">
                         {item.title}
                       </h4>
-                      <p className="text-gray-400 text-sm tracking-widest font-light">{item.price}</p>
+                      <p className="text-gray-700 text-sm tracking-widest font-light">{item.price}</p>
                     </div>
                   </motion.div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 text-gray-400 text-sm tracking-widest uppercase">
+              <div className="text-center py-12 text-gray-700 text-sm tracking-widest uppercase">
                 Featured listings coming soon
               </div>
             )}
@@ -274,7 +293,7 @@ const App: React.FC = () => {
         <section className="py-24 bg-white border-b border-stone-100">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <div className="flex items-baseline justify-between mb-16">
-              <h3 className="text-brand-maroon text-2xl font-light tracking-tight uppercase italic">Insights</h3>
+              <h3 className="text-brand-maroon text-4xl font-med tracking-tight uppercase italic">Insights</h3>
               <a href="/insights" className="text-[9px] tracking-[0.4em] uppercase border-b border-brand-gold pb-1 hover:text-brand-gold transition-colors">View All</a>
             </div>
 
@@ -339,7 +358,7 @@ const App: React.FC = () => {
                     {/* Quotation Icon Accents */}
                     <div className="text-brand-gold text-5xl font-serif mb-4 opacity-40">"</div>
                     
-                    <p className="text-gray-600 leading-relaxed text-sm tracking-wide mb-6 flex-grow italic font-light">
+                    <p className="text-gray-700 leading-relaxed text-sm tracking-wide mb-6 flex-grow italic font-light">
                       {item.text}
                     </p>
                     
@@ -393,20 +412,41 @@ const App: React.FC = () => {
               Sign up for the latest market reports & industry updates.
             </motion.p>
             
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex flex-col md:flex-row max-w-md mx-auto gap-4"
+              className="flex flex-col items-center gap-3"
             >
-              <input 
-                type="email" 
-                placeholder="Email Address" 
-                className="flex-1 bg-white/5 border border-white/20 px-6 py-4 text-xs tracking-widest focus:outline-none focus:border-brand-gold text-white" 
-              />
-              <button className="bg-white text-black px-10 py-4 text-[10px] tracking-widest uppercase hover:bg-brand-gold hover:text-white transition-all duration-500">
-                Sign Up
-              </button>
+              {newsletterStatus === 'success' ? (
+                <p className="text-brand-gold text-xs tracking-[0.3em] uppercase py-4">
+                  ✓ You're on the list. Welcome.
+                </p>
+              ) : (
+                <div className="flex flex-col md:flex-row max-w-md w-full mx-auto gap-4">
+                  <input
+                    type="email"
+                    placeholder="Email Address"
+                    value={newsletterEmail}
+                    onChange={e => { setNewsletterEmail(e.target.value); setNewsletterStatus('idle'); }}
+                    onKeyDown={e => e.key === 'Enter' && handleNewsletterSignup()}
+                    className="flex-1 bg-white/5 border border-white/20 px-6 py-4 text-xs tracking-widest focus:outline-none focus:border-brand-gold text-white"
+                  />
+                  <button
+                    onClick={handleNewsletterSignup}
+                    disabled={newsletterStatus === 'loading'}
+                    className="bg-white text-black px-10 py-4 text-[10px] tracking-widest uppercase hover:bg-brand-gold hover:text-white transition-all duration-500 disabled:opacity-50"
+                  >
+                    {newsletterStatus === 'loading' ? '...' : 'Sign Up'}
+                  </button>
+                </div>
+              )}
+              {newsletterStatus === 'duplicate' && (
+                <p className="text-white/40 text-[10px] tracking-[0.3em] uppercase">Already subscribed.</p>
+              )}
+              {newsletterStatus === 'error' && (
+                <p className="text-red-400 text-[10px] tracking-[0.3em] uppercase">Something went wrong. Try again.</p>
+              )}
             </motion.div>
           </div>
         </section>

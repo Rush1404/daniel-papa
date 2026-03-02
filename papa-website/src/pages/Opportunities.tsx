@@ -25,7 +25,7 @@ const Opportunities: React.FC = () => {
           <h1 className="text-4xl md:text-6xl font-light tracking-[0.3em] text-brand-maroon uppercase mb-4">
             WESTSHORE—LONG BRANCH
           </h1>
-          <p className="text-gray-500 text-sm tracking-widest uppercase italic">
+          <p className="text-gray-700 text-sm tracking-widest uppercase italic">
             Hybrid Stacked Towns in South Etobicoke
           </p>
         </motion.div>
@@ -71,7 +71,7 @@ const Opportunities: React.FC = () => {
             <h2 className="text-brand-maroon text-4xl font-light tracking-tighter uppercase mb-8 leading-tight">
               About the <br/> <span className="text-brand-gold">Community</span>
             </h2>
-            <p className="text-gray-600 leading-relaxed mb-8">
+            <p className="text-gray-700 leading-relaxed mb-8">
               Introducing <span className="font-bold">Westshore at Long Branch</span>, an upcoming pre-construction townhouse project. This project invites you to embrace a unique urban and eco-conscious community, meticulously designed to offer an extraordinary lifestyle.
             </p>
             <button className="btn-maroon">View Site Map</button>
@@ -87,7 +87,7 @@ const Opportunities: React.FC = () => {
             <h2 className="text-brand-maroon text-4xl font-light tracking-tighter uppercase mb-8 leading-tight">
               About the <br/> <span className="text-brand-gold">Townhouses</span>
             </h2>
-            <p className="text-gray-600 leading-relaxed mb-8">
+            <p className="text-gray-700 leading-relaxed mb-8">
               Long Branch is a well-established neighbourhood located on the Toronto waterfront. This lakeside village has many wonderful features such as picturesque waterfront parks, a local arena, and a GO Transit station.
             </p>
             <button className="btn-gold">Request Floorplans</button>

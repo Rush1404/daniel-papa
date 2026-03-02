@@ -9,6 +9,7 @@ import FrontExteriorDefault from '../assets/yucatan_imgs/front_exterior_view.web
 import LivingRoomKitchenDefault from '../assets/yucatan_imgs/living_room_+_kitchen.webp';
 import MasterBathDefault from '../assets/yucatan_imgs/master_bathroom.webp';
 import GuestBed1Default from '../assets/yucatan_imgs/guest_bedroom_1.webp';
+import whyDanielBg from "../assets/why_daniel.jpg";
 
 // 1. Fixed TypeScript Animation Object
 const fadeInUpProps: HTMLMotionProps<"div"> = {
@@ -129,22 +130,22 @@ const Yucatan: React.FC = () => {
               <h3 className="text-brand-maroon text-4xl md:text-5xl font-light tracking-tight mb-8 leading-tight">
                 A Masterpiece <br/> of Coastal Living.
               </h3>
-              <p className="text-gray-600 leading-relaxed mb-8">
+              <p className="text-gray-700 leading-relaxed mb-8">
                 Casa Aida represents a unique opportunity to invest in the rapidly growing market of Progreso, Yucátan.
               </p>
               <div className="flex gap-12 border-t border-gray-100 pt-8">
                 <div>
                   <p className="text-brand-maroon font-bold text-xl">$299k+</p>
-                  <p className="text-[10px] text-gray-400 tracking-widest uppercase">Starting Price</p>
+                  <p className="text-[10px] text-gray-700 tracking-widest uppercase">Starting Price</p>
                 </div>
                 <div>
                   <p className="text-brand-maroon font-bold text-xl">2027</p>
-                  <p className="text-[10px] text-gray-400 tracking-widest uppercase">Completion Date</p>
+                  <p className="text-[10px] text-gray-700 tracking-widest uppercase">Completion Date</p>
                 </div>
               </div>
               <div className="mt-16">
                 <a href="/contact" className="btn-gold w-full md:w-auto">
-                  Explore Yucatán, México
+                  Book a Call with Daniel
                 </a>
               </div>
             </motion.div>
@@ -226,16 +227,26 @@ const Yucatan: React.FC = () => {
                 <div key={i}>
                   <p className="text-brand-gold text-2xl mb-4 font-light italic">0{i + 1}.</p>
                   <h4 className="text-brand-maroon tracking-widest text-sm font-bold mb-4 uppercase">{item.title}</h4>
-                  <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                  <p className="text-gray-700 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="py-24 bg-stone-50 border-t border-stone-200">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+        <section className="relative py-24 border-t border-stone-200 overflow-hidden">
+          {/* Background image — very low opacity so text stays primary */}
+          <div className="absolute inset-0">
+            <img
+              src={whyDanielBg}
+              className="w-full h-full object-cover"
+              alt=""
+            />
+            <div className="absolute inset-0 bg-white/95" />
+          </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="text-center">
               <h2 className="text-brand-maroon text-xs tracking-[0.5em] uppercase mb-20 font-bold">Why Daniel?</h2>
             </div>
             
@@ -247,11 +258,10 @@ const Yucatan: React.FC = () => {
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.2, duration: 0.8 }}
-                  className={`relative p-8 md:p-12 group hover:bg-white transition-colors duration-500 ${
+                  className={`relative p-8 md:p-12 group hover:bg-white/60 transition-colors duration-500 ${
                     index !== 0 ? 'md:border-l border-stone-200' : ''
                   } ${index !== 2 ? 'border-b md:border-b-0 border-stone-200' : ''}`}
                 >
-                  {/* Content */}
                   <div className="relative z-10">
                     <h3 className="text-brand-maroon text-2xl font-light uppercase tracking-wide mb-2">
                       {pillar.title}
@@ -259,20 +269,17 @@ const Yucatan: React.FC = () => {
                     <p className="text-xs text-brand-gold uppercase tracking-[0.2em] mb-8 font-bold">
                       {pillar.subtitle}
                     </p>
-                    <p className="text-gray-600 text-sm leading-7 font-light">
+                    <p className="text-gray-700 text-sm leading-7 font-light">
                       {pillar.description}
                     </p>
                   </div>
-
-                  {/* Hover Line Animation */}
                   <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-maroon group-hover:w-full transition-all duration-700 ease-out" />
                 </motion.div>
               ))}
             </div>
 
-            {/* Call to Action */}
             <div className="mt-16 text-center">
-              <a href="/contact" className="inline-block border-b border-brand-maroon text-brand-maroon text-[10px] tracking-[0.3em] uppercase pb-1 hover:text-brand-gold hover:border-brand-gold transition-all">
+              <a href="/contact" className="btn-gold w-full md:w-auto">
                 Book a Call with Daniel
               </a>
             </div>

@@ -56,43 +56,33 @@ const MeetDaniel: React.FC = () => {
               
               <div className="space-y-8 text-gray-700 text-lg leading-relaxed font-light">
                 <p>
-                  With nearly 15 years of experience navigating the fast-paced markets of the GTA, Durham, Peel, 
-                  and York Regions, Daniel is more than just a Realtor-he is a strategic advisor, a multi-year 
-                  award-winning professional, and a master of the high-stakes transaction. 
+                  With nearly 15 years in the GTA's most competitive markets, Daniel Papa is a strategic advisor known for 
+                  disciplined execution and consistent recognition as a top-performing agent. A [X-time award-winning Realtor], 
+                  he has built his reputation on structured strategy, transparent negotiation, and measurable performance.
                 </p>
                 <p className="md:text-2xl font-light tracking-tighter text-brand-maroon mb-12 uppercase leading-tight">
                   Deep Roots. Global Perspective. 
                 </p>
                 <p>
-                  Daniel's understanding of the Greater Toronto Area is built on lived experience. Raised in 
-                  Scarborough and having spent over a decade living behind the Eaton Centre, he has 
-                  witnessed the transformation of the city's skyline firsthand. This local DNA, combined with 
-                  the global perspective gained from developing his own compound in Mexico, gives Daniel a "builder's 
-                  eye" that most agents lack. He sees beyond the staging-identifying structural integrity and 
-                  navigating the critical minutiae of building permits to protect his clients from liability and 
-                  ensure a seamless close. 
+                  Raised in Scarborough and having lived in Toronto's urban core for over a decade, Daniel has witnessed the city's 
+                  evolution firsthand. That lived perspective—combined with his experience developing property internationally—gives 
+                  him a builder's eye and an investor's discipline. He evaluates beyond surface appeal, identifying structural integrity, 
+                  permit considerations, and long-term value before a contract is ever signed.
                 </p>
                 <p className="md:text-2xl font-light tracking-tighter text-brand-maroon mb-12 uppercase leading-tight">
                   The Investor's Edge
                 </p>
                 <p>
-                  As a sophisticated investor, Daniel understands value across the board. Whether it is real estate, stocks, 
-                  crypto, precious metals, or the high-end sports card market, he has a proven track record of identifying 
-                  assets with growth potential. He doesn't just "show houses"; he analyzes opportunities. His negotiation 
-                  skills are refined and high-end, allowing him to maneuver through complex scenarios with a level of transparency 
-                  and straightforwardness that is rare in the industry. Daniel takes the lead as an educator, ensuring his clients 
-                  are the most informed people in the room. 
+                  Daniel approaches every transaction with the mindset of an investor. He analyzes risk, negotiates from leverage, and 
+                  ensures his clients are the most informed decision-makers at the table. His style is direct, transparent, and structured—designed 
+                  to protect capital and position clients advantageously in high-stakes environments.
                 </p>
                 <p className="md:text-2xl font-light tracking-tighter text-brand-maroon mb-12 uppercase leading-tight">
                   Driven by Discipline and Heritage
                 </p>
                 <p>
-                  Deeply rooted in his Filipino heritage, Daniel operates with a "family-first" philosophy. To him, his clients are 
-                  an extension of that circle. This sense of loyalty, combined with the competitive spirit he sharpens on the Padel 
-                  and basketball courts, fuels his drive to win. As an award-winning top producer, he isn't satisfied until his clients prosper. 
-                  
-                  When you work with Daniel, you aren't just getting a salesperson; you are gaining a disciplined, transparent, and highly adaptable partner who treats your investment with the same rigor he applies to his own. 
-
+                  When you work with Daniel, you gain more than representation—you gain a disciplined partner committed to protecting and 
+                  advancing your investment.
                 </p>
               </div>
 
