@@ -283,6 +283,13 @@ const Yucatan: React.FC = () => {
                 Book a Call with Daniel
               </a>
             </div>
+            <div className="mt-6 text-center">
+              <p className="text-gray-700 text-sm leading-7 italic font-light">
+                * Disclaimer: Real estate services for Mexican properties are provided 
+                independenty of Century 21 Leacing Edge Realty Inc. Intemational properties are 
+                for relerral purposes only.
+              </p>
+            </div>
           </div>
         </section>
       </div>
@@ -291,3 +298,4 @@ const Yucatan: React.FC = () => {
 };
 
 export default Yucatan;
+

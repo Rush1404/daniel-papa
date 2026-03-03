@@ -44,12 +44,7 @@ const fadeInUp = {
   transition: { duration: 0.8, ease: "easeOut" as const }
 };
 
-const sideFade = (direction: 'left' | 'right') => ({
-  initial: { opacity: 0, x: direction === 'left' ? -100 : 100 },
-  whileInView: { opacity: 1, x: 0 },
-  transition: { duration: 1.2, ease: "easeOut" as const },
-  viewport: { once: false, amount: 0.2 }
-});
+
 
 // --- Main App Component ---
 const App: React.FC = () => {
@@ -195,8 +190,8 @@ const App: React.FC = () => {
               transition={{ delay: 0.7, duration: 0.8 }}
               className="text-gray-700 text-sm md:text-lg font-light max-w-xl mb-12 leading-relaxed"
             >
-              By combining your vision with my 15 years of proven strategic real estate market expertise,
-              your next move will be as rewarding as it is seamless. 
+              With 15 years of Award-winning and proven strategic real
+              estate market expertise.
             </motion.p>
             
             {/* Buttons Container - Left Aligned */}
@@ -210,6 +205,29 @@ const App: React.FC = () => {
               <a className="btn-gold" href="/yucatan">Yucatán, México</a>
             </motion.div>
           </div>
+        </section>
+
+        {/* ABOUT DANIEL — Mobile Only */}
+        <section className="block md:hidden py-16 px-6 bg-white border-t border-stone-100">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-sm mx-auto"
+          >
+            <div className="w-12 h-[1px] bg-brand-gold mx-auto mb-6"></div>
+            <h3 className="text-brand-maroon text-[10px] tracking-[0.5em] uppercase font-bold mb-4">About Daniel</h3>
+            <p className="text-gray-700 text-sm leading-relaxed font-light mb-6">
+              With nearly 15 years of award-winning expertise across the GTA, Daniel is a strategic negotiator who turns complex market moves into your greatest advantage. A Scarborough native with a global perspective, he brings an investor's eye and an educator's clarity to every transaction.
+            </p>
+            <Link 
+              to="/meet-daniel" 
+              className="inline-block text-[9px] tracking-[0.4em] uppercase border-b border-brand-gold pb-1 text-brand-maroon hover:text-brand-gold transition-colors"
+            >
+              Meet Daniel
+            </Link>
+          </motion.div>
         </section>
 
         {/* CATEGORY GRID (BLOG SECTION) */}
@@ -398,7 +416,7 @@ const App: React.FC = () => {
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              className="text-4xl font-light tracking-[0.2em] mb-4 uppercase"
+              className="text-4xl text-brand-gold font-medium tracking-[0.2em] mb-4 uppercase italic"
             >
               Stay Informed.
             </motion.h2>
@@ -407,7 +425,7 @@ const App: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-white/50 text-[10px] tracking-widest mb-12"
+              className="text-white text-[10px] tracking-widest mb-12"
             >
               Sign up for the latest market reports & industry updates.
             </motion.p>

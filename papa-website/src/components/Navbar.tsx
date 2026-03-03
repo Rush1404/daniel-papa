@@ -42,7 +42,6 @@ const Navbar: React.FC = () => {
 
   const navLinks = [
     { name: 'Meet Daniel', path: '/meet-daniel' },
-    { name: 'My Approach', path: '/mission' },
     { name: 'Insights', path: '/insights' },
     { 
       name: 'Ontario', 

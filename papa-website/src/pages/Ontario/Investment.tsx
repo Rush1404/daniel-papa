@@ -162,8 +162,8 @@ const Investment: React.FC = () => {
       {/* SECTION 1: HERO - Residential Properties */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-20 flex flex-col lg:flex-row items-center gap-16">
         <motion.div {...fadeInUp} className="flex-1 order-2 lg:order-1">
-          <h1 className="text-5xl md:text-7xl font-light tracking-widest text-brand-maroon mb-8 uppercase leading-tight">
-            INVESTMENT & <br/> MULTI-FAMILY
+          <h1 className="text-5xl md:text-7xl font-light tracking-widest text-brand-maroon mb-8 uppercase text-center leading-tight">
+            INVESTMENT <br/> & <br/> MULTI-FAMILY
           </h1>
           <p className="text-gray-700 text-lg leading-relaxed mb-10 max-w-lg">
             Strategic wealth preservation through institutional-grade assets. We specialize in identifying high-yield multi-family opportunities and turnkey portfolios for the discerning investor.

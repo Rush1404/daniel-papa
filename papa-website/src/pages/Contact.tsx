@@ -169,50 +169,6 @@ const Contact: React.FC = () => {
                       />
                     </div>
 
-                    {/* Market & Timing */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className={labelClasses}>Market of Interest</label>
-                        <select className={inputClasses} value={market} onChange={e => setMarket(e.target.value)}>
-                          <option value="">Select Market</option>
-                          <option>Ontario</option>
-                          <option>Yucatan</option>
-                          <option>Both</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className={labelClasses}>Timing</label>
-                        <select className={inputClasses} value={timing} onChange={e => setTiming(e.target.value)}>
-                          <option value="">Select Timeline</option>
-                          <option>Immediate (&lt;3 mo)</option>
-                          <option>Planning (3-12 mo)</option>
-                          <option>Researching</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Budget & Goal */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className={labelClasses}>Budget Range</label>
-                        <select className={inputClasses} value={budget} onChange={e => setBudget(e.target.value)}>
-                          <option value="">Select Budget</option>
-                          <option>$500k–$1M</option>
-                          <option>$1M–$3M</option>
-                          <option>$3M+</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className={labelClasses}>Investment Goal</label>
-                        <select className={inputClasses} value={goal} onChange={e => setGoal(e.target.value)}>
-                          <option value="">Select Goal</option>
-                          <option>Relocating</option>
-                          <option>Investing</option>
-                          <option>Vacation Home</option>
-                        </select>
-                      </div>
-                    </div>
-
                     {/* Proceed CTA */}
                     <div className="pt-4">
                       <motion.button
@@ -260,7 +216,7 @@ const Contact: React.FC = () => {
 
                   <div className="border border-stone-100 overflow-hidden">
                     <iframe
-                      src="https://zcal.co/i/Wm4eqwQH?embed=1&embedType=iframe"
+                      src="https://zcal.co/i/QNGWcw-O?embed=1&embedType=iframe"
                       loading="lazy"
                       style={{ border: 'none', width: '100%', height: '680px', display: 'block' }}
                       id="zcal-invite"

@@ -4,7 +4,6 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import MeetDaniel from './pages/MeetDaniel';
 import Residential from './pages/Ontario/Residential';
-import Mission from './pages/Approach';
 import Contact from './pages/Contact';
 import Yucatan from './pages/Yucatan';
 import PreConstruction from './pages/Ontario/PreConstruction';
@@ -32,7 +31,6 @@ const App: React.FC = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/meet-daniel" element={<MeetDaniel />} />
         <Route path="/residential" element={<Residential />} />
-        <Route path="/mission" element={<Mission />} />
         <Route path='/pre-construction' element={<PreConstruction />} />
         <Route path='/investment' element={<Investment />} />
         <Route path="/commercial" element={<Commercial />} />
@@ -90,8 +88,8 @@ const App: React.FC = () => {
               </a>
             </div>
             <div className="text-[10px] tracking-[0.2em] uppercase space-y-2 font-light text-white">
-              <a href="tel:4169533540" className="block hover:text-brand-gold transition-colors">
-                M 416.953.3540
+              <a href="tel:+1 4169533540" className="block hover:text-brand-gold transition-colors">
+                M +1 416.953.3540
               </a>
               <a href="mailto:PROPERTIES@DANIELPAPA.COM" className="block hover:text-brand-gold transition-colors">
                 PROPERTIES@DANIELPAPA.COM

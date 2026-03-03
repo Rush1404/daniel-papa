@@ -54,7 +54,7 @@ const BlogStrip: React.FC = () => {
             <h3 className="text-brand-maroon text-2xl font-light tracking-tight uppercase italic">
               Insights & Editorial
             </h3>
-            <p className="text-[10px] text-gray-700 tracking-[0.3em] uppercase">The Daniel Papa Journal</p>
+            <p className="text-[10px] text-gray-700 tracking-[0.3em] uppercase">Papa the Realtor</p>
           </div>
           <a 
             href="/journal" 
