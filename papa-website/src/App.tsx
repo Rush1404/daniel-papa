@@ -47,7 +47,7 @@ const App: React.FC = () => {
         
         {/* Call Now Button */}
         <a 
-          href="tel:4169533540" 
+          href="tel:+14169533540" 
           className="flex-1 flex items-center justify-center gap-2 bg-black text-white py-4 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase transition-transform active:scale-95 shadow-lg"
         >
           <Phone size={14} className="text-brand-gold" />
@@ -76,13 +76,13 @@ const App: React.FC = () => {
               </p>
             </div>
             <div className="flex gap-6 text-white">
-              <a href="#" className="hover:text-brand-gold transition-colors">
+              <a href="https://www.instagram.com/papatherealtor" target='_blank' className="hover:text-brand-gold transition-colors">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="hover:text-brand-gold transition-colors">
+              <a href="https://www.facebook.com/papaproperties" target='_blank' className="hover:text-brand-gold transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="hover:text-brand-gold transition-colors">
+              <a href="https://www.linkedin.com/in/daniel-papa-8674462" target='_blank' className="hover:text-brand-gold transition-colors">
                 <Linkedin size={20} />
               </a>
             </div>
