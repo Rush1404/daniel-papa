@@ -27,6 +27,7 @@ interface FeaturedProperty {
   image: string;
   details: string;
   category: string;
+  mls_link?: string;
 }
 
 const categories: Category[] = [
@@ -295,6 +296,23 @@ const App: React.FC = () => {
                         {item.title}
                       </h4>
                       <p className="text-gray-700 text-sm tracking-widest font-light">{item.price}</p>
+                      {item.mls_link ? (
+                      <a 
+                        href={item.mls_link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all"
+                      >
+                        View Details
+                      </a>
+                    ) : (
+                      <Link 
+                        to="/contact"
+                        className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all"
+                      >
+                        View Details
+                      </Link>
+                    )}
                     </div>
                   </motion.div>
                 ))}

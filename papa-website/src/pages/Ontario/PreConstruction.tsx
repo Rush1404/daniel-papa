@@ -11,76 +11,8 @@ interface Property {
   price: string;
   image: string;
   details: string;
+  mls_link?: string;
 }
-
-// --- Sub-Component for individual Cards ---
-// const ListingCard = ({ property, delay }: { property: any, delay: number }) => {
-//   const [imgIndex, setImgIndex] = useState(0);
-
-//   const nextImg = (e: React.MouseEvent) => {
-//     e.stopPropagation();
-//     setImgIndex((prev) => (prev === property.images.length - 1 ? 0 : prev + 1));
-//   };
-
-//   const prevImg = (e: React.MouseEvent) => {
-//     e.stopPropagation();
-//     setImgIndex((prev) => (prev === 0 ? property.images.length - 1 : prev - 1));
-//   };
-
-//   return (
-//     <motion.div 
-//       initial={{ opacity: 0, y: 20 }}
-//       whileInView={{ opacity: 1, y: 0 }}
-//       transition={{ duration: 0.8, delay }}
-//       viewport={{ once: false }}
-//       className="group flex flex-col"
-//     >
-//       {/* Mini Carousel Box */}
-//       <div className="relative aspect-[4/5] mb-4 overflow-hidden shadow-sm">
-//         <AnimatePresence mode="wait">
-//           <motion.img 
-//             key={imgIndex}
-//             src={property.images[imgIndex]} 
-//             initial={{ opacity: 0 }}
-//             animate={{ opacity: 1 }}
-//             exit={{ opacity: 0 }}
-//             transition={{ duration: 0.4 }}
-//             className="w-full h-full object-cover"
-//           />
-//         </AnimatePresence>
-
-//         {/* Minimalist Arrows - Only visible on hover */}
-//         <div className="absolute inset-0 flex items-center justify-between px-2 opacity-0 group-hover:opacity-100 transition-opacity">
-//           <button onClick={prevImg} className="p-1 bg-white/80 rounded-full text-brand-maroon hover:bg-white">
-//             <ChevronLeft size={14} />
-//           </button>
-//           <button onClick={nextImg} className="p-1 bg-white/80 rounded-full text-brand-maroon hover:bg-white">
-//             <ChevronRight size={14} />
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Property Details */}
-//       <div className="text-left space-y-1">
-//         <p className="text-[9px] tracking-[0.2em] text-brand-gold uppercase font-bold">
-//           {property.type}
-//         </p>
-//         <h4 className="text-[11px] tracking-widest text-brand-maroon font-medium uppercase">
-//           {property.address}
-//         </h4>
-//         <p className="text-[10px] tracking-widest text-gray-700 font-light italic">
-//           {property.specs}
-//         </p>
-//         <div className="pt-2">
-//            <button className="text-[9px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-0.5 hover:border-brand-gold transition-colors">
-//             View Listing
-//            </button>
-//         </div>
-//       </div>
-//     </motion.div>
-//   );
-// };
-
 
 
 const PreConstruction: React.FC = () => {
@@ -231,9 +163,23 @@ const PreConstruction: React.FC = () => {
                         <p className="text-xl font-light text-gray-700 mb-6 tracking-widest">
                             {prop.price}
                         </p>
-                        <button className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all">
+                        {prop.mls_link ? (
+                          <a 
+                            href={prop.mls_link} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all"
+                          >
                             View Details
-                        </button>
+                          </a>
+                        ) : (
+                          <Link 
+                            to="/contact"
+                            className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all"
+                          >
+                            View Details
+                          </Link>
+                        )}
                         </div>
                     </div>
                     ))}

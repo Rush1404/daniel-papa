@@ -65,7 +65,6 @@ const App: React.FC = () => {
       </div>
 
       <footer className="bg-black py-24 px-6 lg:px-12 border-t border-white/5 text-white">
-        {/* ... (Existing footer code remains unchanged) ... */}
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-16">
           <div className="flex-1 space-y-8 text-left">
             <div>
@@ -117,7 +116,7 @@ const App: React.FC = () => {
             </p>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-4 pt-2 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[8px] tracking-[0.3em] text-white uppercase">
+        <div className="max-w-7xl mx-auto mt-4 pt-2 border-t border-white/5 flex flex-col md:flex-row justify-between text-left gap-4 text-[8px] tracking-[0.3em] text-white uppercase">
           <p>© 2026 Daniel Papa Real Estate. All Rights Reserved.</p>
           <div className="flex gap-8">
             <Link to="/" className="hover:text-white transition-colors">Privacy Policy</Link>

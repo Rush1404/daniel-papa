@@ -18,6 +18,7 @@ interface Property {
   category: string;
   is_hidden: boolean;
   is_featured: boolean;
+  mls_link?: string;
 }
 
 interface Blog {
@@ -56,6 +57,7 @@ const AdminPortal: React.FC = () => {
   const [propCategory, setPropCategory] = useState('Commercial');
   const [propImage, setPropImage] = useState<File | null>(null);
   const [currentPropImageUrl, setCurrentPropImageUrl] = useState('');
+  const [propMlsLink, setPropMlsLink] = useState('');
 
   // --- BLOG STATE ---
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -188,7 +190,8 @@ const AdminPortal: React.FC = () => {
         price: propPrice,
         details: propDetails,
         category: propCategory,
-        image: imageUrl
+        image: imageUrl,
+        mls_link: propMlsLink
       };
 
       if (editingPropId) {
@@ -208,6 +211,7 @@ const AdminPortal: React.FC = () => {
     }
   };
 
+  // FIXED — writes to page_assets, which the category pages actually read from
   const handleHeroUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!heroFile) return;
@@ -215,9 +219,14 @@ const AdminPortal: React.FC = () => {
     try {
       const publicUrl = await uploadImage(heroFile, 'hero-banners');
 
-      await supabase
-        .from('site_settings')
-        .upsert({ key: `hero_${heroPage}`, value: publicUrl }, { onConflict: 'key' });
+      const { error } = await supabase
+        .from('page_assets')
+        .upsert({ 
+          page_name: heroPage, 
+          hero_image_url: publicUrl 
+        }, { onConflict: 'page_name' });
+
+      if (error) throw error;
 
       alert(`Hero image for ${heroPage} updated!`);
       setHeroFile(null);
@@ -233,6 +242,7 @@ const AdminPortal: React.FC = () => {
     setPropDetails(prop.details);
     setPropCategory(prop.category);
     setCurrentPropImageUrl(prop.image);
+    setPropMlsLink(prop.mls_link || '');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -289,6 +299,7 @@ const AdminPortal: React.FC = () => {
     setPropDetails('');
     setPropImage(null);
     setCurrentPropImageUrl('');
+    setPropMlsLink('');
   };
 
   // ==============================
@@ -547,6 +558,12 @@ const AdminPortal: React.FC = () => {
                   <div className="flex gap-4">
                       <input placeholder="Price" value={propPrice} onChange={e => setPropPrice(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
                       <input placeholder="Details" value={propDetails} onChange={e => setPropDetails(e.target.value)} className="w-full border-b border-stone-200 py-3 outline-none" required />
+                      <input 
+                        placeholder="MLS Listing URL (optional)" 
+                        value={propMlsLink} 
+                        onChange={e => setPropMlsLink(e.target.value)} 
+                        className="w-full border-b border-stone-200 py-3 outline-none text-sm" 
+                      />
                   </div>
                   <label className="cursor-pointer border border-dashed border-stone-300 p-8 flex flex-col items-center justify-center text-gray-700 hover:border-brand-gold transition-all">
                     <Camera size={24} className="mb-2" />

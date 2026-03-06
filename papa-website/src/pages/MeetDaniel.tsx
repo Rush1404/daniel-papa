@@ -221,7 +221,7 @@ const MeetDaniel: React.FC = () => {
               <motion.div {...fadeInUp} transition={{ delay: 0.4 }} className="text-center group">
                 <div className="text-brand-gold text-4xl font-extralight mb-6">02</div>
                 <h4 className="text-brand-maroon tracking-[0.2em] font-medium mb-4">INNOVATION</h4>
-                <p className="text-gray-700 text-sm leading-relaxed">Fusing market intelligence with modern Al tools to identify exclusive opportunities and drive smarter decisions</p>
+                <p className="text-gray-700 text-sm leading-relaxed">Data driven insight applied with precision.</p>
               </motion.div>
 
               <motion.div {...fadeInUp} transition={{ delay: 0.6 }} className="text-center group">

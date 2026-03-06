@@ -11,6 +11,7 @@ interface Property {
   price: string;
   image: string;
   details: string;
+  mls_link?: string;
 }
 
 // --- Sub-Component for individual Cards ---
@@ -227,9 +228,23 @@ const Investment: React.FC = () => {
                         <p className="text-xl font-light text-gray-700 mb-6 tracking-widest">
                             {prop.price}
                         </p>
-                        <button className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all">
+                        {prop.mls_link ? (
+                          <a 
+                            href={prop.mls_link} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all"
+                          >
                             View Details
-                        </button>
+                          </a>
+                        ) : (
+                          <Link 
+                            to="/contact"
+                            className="text-[10px] tracking-[0.3em] uppercase border-b border-brand-gold/30 pb-1 hover:border-brand-gold transition-all"
+                          >
+                            View Details
+                          </Link>
+                        )}
                         </div>
                     </div>
                     ))}
