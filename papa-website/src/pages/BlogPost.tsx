@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { supabase } from '../components/supabaseClient';
-import { ArrowLeft, Share2, Clock } from 'lucide-react';
+import { ArrowLeft} from 'lucide-react';
 
 const BlogPost: React.FC = () => {
   const { slug } = useParams();
@@ -122,7 +122,7 @@ const BlogPost: React.FC = () => {
             {/* 6. Signature Footer */}
             <footer className="mt-32 pt-12 border-t border-stone-100 text-center">
               <p className="text-[10px] tracking-[0.5em] uppercase text-brand-maroon font-bold mb-2">Daniel Papa</p>
-              <p className="text-stone-400 text-xs italic mb-12">Principal Broker & Strategy Lead</p>
+              <p className="text-stone-400 text-xs italic mb-12">Realtor®</p>
               <Link 
                 to="/contact" 
                 className="inline-block px-12 py-4 bg-brand-maroon text-white text-[10px] tracking-[0.4em] uppercase hover:bg-brand-gold transition-all duration-500"
